@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  python_engine:
+    build:
+      context: ./eco-stochast-poc/python_engine
+    restart: always
+    environment:
+      - PORT=8000
+
+  bot:
+    build:
+      context: .
+    restart: always
+    depends_on:
+      - python_engine
+    environment:
+      - PYTHON_API_URL=http://python_engine:8000/simulate_risk
+      - NODE_ENV=production
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env
+      - ./service-account.json:/app/service-account.json
+      - ./service-account-climate.json:/app/service-account-climate.json
+
+volumes:
+  data:

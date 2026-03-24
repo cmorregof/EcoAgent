@@ -1,0 +1,29 @@
+{
+  "name": "opengravity",
+  "version": "1.0.0",
+  "description": "OpenGravity - Personal Telegram AI Agent",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@grammyjs/files": "^1.2.0",
+    "axios": "^1.13.6",
+    "dotenv": "^16.4.5",
+    "elevenlabs": "^1.59.0",
+    "firebase-admin": "^13.7.0",
+    "google-auth-library": "^10.6.1",
+    "googleapis": "^171.4.0",
+    "grammy": "^1.32.0",
+    "openai": "^4.73.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
