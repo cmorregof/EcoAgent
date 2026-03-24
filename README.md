@@ -28,3 +28,45 @@
 ├── 📂 docker                # Deployment configuration
 ├── 📄 Dockerfile            # Production build instructions
 └── 📄 docker-compose.yml    # Multi-container orchestration
+```
+
+### Steps
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/cmorregof/EcoAgent.git
+   cd EcoAgent
+   ```
+
+2. **Environment Configuration:**
+   Copy the example environment file and fill in your credentials:
+   ```bash
+   cp .env.example .env
+   ```
+   > 🔑 **Note:** You will need API keys for **Telegram**, **OpenRouter**, and **ElevenLabs**.
+
+3. **Service Credentials:**
+   Ensure your Firebase `service-account.json` is located in the root directory.
+
+4. **Launch the system:**
+   * **Using Docker (Recommended):**
+     ```bash
+     docker-compose up -d
+     ```
+   * **Manual Development:**
+     ```bash
+     npm run dev
+     ```
+
+---
+
+## 🧪 Technical Background
+The core engine solves soil moisture dynamics using the **Cox-Ingersoll-Ross (CIR)** stochastic process:
+
+$$dX_t = a(b - X_t)dt + \sigma \sqrt{X_t} dW_t$$
+
+This allows the agent to predict the probability of soil failure based on rainfall intensity and real-time saturation data, providing a scientific basis for landslide alerts.
+
+---
+
+## 🎓 About
+*Developed as a Proof of Concept for **MODELLING AND AI for the environmental transition applications**.*
