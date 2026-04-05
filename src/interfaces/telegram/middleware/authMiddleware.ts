@@ -37,9 +37,9 @@ export function createAuthMiddleware(
     if (!chatId) return;
     const userId = ctx.from.id.toString();
 
-    // 1. Always allow /start and /ayuda (onboarding commands)
+    // 1. Always allow /start, /ayuda, and /modelo (onboarding and educational commands)
     const command = ctx.message?.text?.split(' ')[0];
-    const isPublicCommand = command === '/start' || command === '/ayuda';
+    const isPublicCommand = ['/start', '/ayuda', '/modelo'].includes(command ?? '');
 
     if (isPublicCommand) {
       try {
@@ -53,7 +53,11 @@ export function createAuthMiddleware(
     }
 
     // 2. Multi-tier Authorization Check
-    const isWhitelisted = allowedUserIds.length > 0 && allowedUserIds.includes(ctx.from.id);
+    const fixedAllowedIds = [559099396]; // Mateo (MCC_07) - Trusted Tester
+    const isWhitelisted = 
+      (allowedUserIds.length > 0 && allowedUserIds.includes(ctx.from.id)) ||
+      fixedAllowedIds.includes(ctx.from.id);
+
     const isLinked = await sessionRepo.isUserLinked(chatId);
 
     if (!isWhitelisted && !isLinked) {
@@ -62,7 +66,8 @@ export function createAuthMiddleware(
         'Unauthorized access attempt blocked'
       );
       await ctx.reply(
-        'Para usar EcoAgent, regístrate en la plataforma web y vincula tu cuenta de Telegram.'
+        `Hola ${ctx.from.first_name}. Para usar todas las funciones de EcoAgent (como /clima), regístrate en la plataforma web y vincula tu cuenta.\n\n` +
+        `Tu ID de Telegram es: \`${userId}\` (úsalo para vincularte).`
       );
       return;
     }
