@@ -88,9 +88,13 @@ export class PythonCIREngine implements ISimulationEngine {
 
         // Connection refused or timeout
         if (err.code === 'ECONNREFUSED' || err.code === 'ECONNABORTED') {
-          logger.error({ err, input }, 'Simulation engine unreachable');
+          const fullUrl = `${this.client.defaults.baseURL}/simulate_risk`;
+          logger.error(
+            { err, input, targetUrl: fullUrl },
+            `Simulation engine unreachable at ${fullUrl}. Check if the engine is running and the PYTHON_API_URL is correct.`
+          );
           throw new SimulationServiceUnavailableError(
-            `Simulation engine unreachable: ${err.code}`,
+            `Simulation engine unreachable at ${fullUrl}: ${err.code}`,
             err
           );
         }
