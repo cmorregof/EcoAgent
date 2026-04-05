@@ -9,28 +9,33 @@
 import pino from 'pino';
 import { settings } from './settings.js';
 
-const transport =
-  settings.NODE_ENV === 'development'
-    ? {
-        target: 'pino-pretty',
-        options: {
-          colorize: true,
-          translateTime: 'HH:MM:ss',
-          ignore: 'pid,hostname',
-        },
-      }
-    : undefined; // In production: raw JSON to stdout (default pino behavior)
+const isDev = settings.NODE_ENV === 'development';
 
 /**
  * Singleton structured logger for the entire application.
  * - Development: human-readable via pino-pretty
  * - Production: JSON lines for log aggregation services
  */
-export const logger: pino.Logger = pino({
-  level: settings.NODE_ENV === 'development' ? 'debug' : 'info',
-  base: {
-    service: 'ecoagent-bot',
-    version: process.env['npm_package_version'] ?? '0.0.0',
-  },
-  transport,
-});
+export const logger = isDev
+  ? pino({
+      level: 'debug',
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          translateTime: 'HH:MM:ss',
+          ignore: 'pid,hostname',
+        },
+      },
+      base: {
+        service: 'ecoagent-bot',
+        version: process.env.npm_package_version ?? 'unknown',
+      },
+    })
+  : pino({
+      level: 'info',
+      base: {
+        service: 'ecoagent-bot',
+        version: process.env.npm_package_version ?? 'unknown',
+      },
+    });
