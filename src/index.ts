@@ -18,6 +18,7 @@ import { SupabaseSessionRepository } from './infrastructure/session/SupabaseSess
 
 // ── Application ──────────────────────────────────────────────
 import { RiskAnalysisUseCase } from './application/RiskAnalysisUseCase.js';
+import { ModelExplanationUseCase } from './application/ModelExplanationUseCase.js';
 
 // ── Interface ────────────────────────────────────────────────
 import { createBot, startBot } from './interfaces/telegram/bot.js';
@@ -63,6 +64,11 @@ async function main(): Promise<void> {
     sessionRepo,
     openai
   );
+  
+  const modelExplanation = new ModelExplanationUseCase(
+    openai,
+    sessionRepo
+  );
 
   // 3. Interface layer (Telegram bot)
   const bot = createBot({
@@ -70,6 +76,7 @@ async function main(): Promise<void> {
     allowedUserIds: settings.TELEGRAM_ALLOWED_USER_IDS,
     sessionRepo,
     riskAnalysis,
+    modelExplanation,
     openai,
     weatherService,
     simulationEngine,

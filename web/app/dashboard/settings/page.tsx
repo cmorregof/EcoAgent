@@ -11,6 +11,8 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { Language } from '@/lib/i18n/translations';
 
 interface Settings {
   alert_threshold: string;
@@ -26,6 +28,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const router = useRouter();
+  const { t, setLanguage } = useLanguage();
 
   useEffect(() => {
     loadSettings();
@@ -67,6 +70,7 @@ export default function SettingsPage() {
       })
       .eq('user_id', user.id);
 
+    setLanguage(settings.language as Language);
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
@@ -75,7 +79,7 @@ export default function SettingsPage() {
   if (loading || !settings) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-400 animate-pulse">Cargando configuración...</div>
+        <div className="text-slate-400 animate-pulse">{t('common.loading')}</div>
       </div>
     );
   }
@@ -87,16 +91,16 @@ export default function SettingsPage() {
           onClick={() => router.push('/dashboard')}
           className="text-slate-400 hover:text-green-400 transition-colors"
         >
-          ← Volver
+          {t('settings.back')}
         </button>
-        <h1 className="text-2xl font-bold gradient-text">Configuración</h1>
+        <h1 className="text-2xl font-bold gradient-text">{t('settings.title')}</h1>
       </div>
 
       <div className="glass-card p-8 space-y-6">
         {/* Alert Threshold */}
         <div>
           <label htmlFor="threshold" className="block text-sm font-medium text-slate-300 mb-2">
-            Umbral de Alerta
+            {t('settings.threshold_label')}
           </label>
           <select
             id="threshold"
@@ -104,21 +108,21 @@ export default function SettingsPage() {
             onChange={(e) => setSettings({ ...settings, alert_threshold: e.target.value })}
             className="w-full"
           >
-            <option value="LOW">🟢 LOW — Notificar siempre</option>
-            <option value="MEDIUM">🟡 MEDIUM — Riesgo moderado o superior</option>
-            <option value="HIGH">🟠 HIGH — Solo riesgo alto o crítico</option>
-            <option value="CRITICAL">🔴 CRITICAL — Solo emergencias</option>
+            <option value="LOW">🟢 LOW</option>
+            <option value="MEDIUM">🟡 MEDIUM</option>
+            <option value="HIGH">🟠 HIGH</option>
+            <option value="CRITICAL">🔴 CRITICAL</option>
           </select>
           <p className="text-xs text-slate-500 mt-1">
-            Solo recibirás alertas cuando el nivel de riesgo iguale o supere este umbral.
+            {t('settings.threshold_desc')}
           </p>
         </div>
 
         {/* Voice */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-slate-300">Alertas por voz</p>
-            <p className="text-xs text-slate-500">Recibir notas de voz en Telegram cuando el riesgo es alto</p>
+            <p className="text-sm font-medium text-slate-300">{t('settings.voice_label')}</p>
+            <p className="text-xs text-slate-500">{t('settings.voice_desc')}</p>
           </div>
           <button
             onClick={() => setSettings({ ...settings, voice_enabled: !settings.voice_enabled })}
@@ -158,7 +162,7 @@ export default function SettingsPage() {
         {/* Language */}
         <div>
           <label htmlFor="language" className="block text-sm font-medium text-slate-300 mb-2">
-            Idioma
+            {t('settings.language_label')}
           </label>
           <select
             id="language"
@@ -169,16 +173,19 @@ export default function SettingsPage() {
             <option value="es">🇪🇸 Español</option>
             <option value="en">🇺🇸 English</option>
           </select>
+          <p className="text-xs text-slate-500 mt-1">
+            {t('settings.language_desc')}
+          </p>
         </div>
 
         {/* Save */}
         <div className="pt-4 border-t border-slate-700/50">
           <button onClick={handleSave} disabled={saving} className="btn-primary w-full">
-            {saving ? 'Guardando...' : saved ? '✓ Guardado' : 'Guardar cambios'}
+            {saving ? t('common.saving') : saved ? `✓ ${t('settings.success')}` : t('common.save')}
           </button>
           {saved && (
             <p className="text-green-400 text-sm text-center mt-2">
-              Los cambios se sincronizarán automáticamente con tu bot de Telegram.
+              {t('settings.success')}
             </p>
           )}
         </div>

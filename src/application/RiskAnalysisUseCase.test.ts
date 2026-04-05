@@ -73,9 +73,21 @@ function createMocks() {
     updateSettings: vi.fn(),
     appendMessage: vi.fn(),
     getHistory: vi.fn().mockResolvedValue([]),
+    saveReport: vi.fn(),
+    isUserLinked: vi.fn().mockResolvedValue(true),
   };
 
-  return { simulationEngine, voiceService, weatherService, sessionRepo };
+  const openai: any = {
+    chat: {
+      completions: {
+        create: vi.fn().mockResolvedValue({
+          choices: [{ message: { content: 'AI summary' } }],
+        }),
+      },
+    },
+  };
+
+  return { simulationEngine, voiceService, weatherService, sessionRepo, openai };
 }
 
 describe('RiskAnalysisUseCase', () => {
@@ -92,7 +104,8 @@ describe('RiskAnalysisUseCase', () => {
       mocks.simulationEngine,
       mocks.voiceService,
       mocks.weatherService,
-      mocks.sessionRepo
+      mocks.sessionRepo,
+      mocks.openai
     );
 
     await useCase.analyzeRisk('chat-123');
@@ -113,7 +126,8 @@ describe('RiskAnalysisUseCase', () => {
       mocks.simulationEngine,
       mocks.voiceService,
       mocks.weatherService,
-      mocks.sessionRepo
+      mocks.sessionRepo,
+      mocks.openai
     );
 
     await useCase.analyzeRisk('chat-123');
@@ -134,7 +148,8 @@ describe('RiskAnalysisUseCase', () => {
       mocks.simulationEngine,
       mocks.voiceService,
       mocks.weatherService,
-      mocks.sessionRepo
+      mocks.sessionRepo,
+      mocks.openai
     );
 
     await expect(useCase.analyzeRisk('chat-123')).rejects.toThrow('Weather API timeout');
@@ -155,7 +170,8 @@ describe('RiskAnalysisUseCase', () => {
       mocks.simulationEngine,
       mocks.voiceService,
       mocks.weatherService,
-      mocks.sessionRepo
+      mocks.sessionRepo,
+      mocks.openai
     );
 
     await useCase.analyzeRisk('chat-123');

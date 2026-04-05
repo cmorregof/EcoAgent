@@ -10,6 +10,8 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 import dynamic from 'next/dynamic';
 
 // Lazy-load chart and map to avoid SSR issues
@@ -45,6 +47,8 @@ export default function DashboardPage() {
   const [reports, setReports] = useState<RiskReport[]>([]);
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     loadData();
@@ -55,7 +59,7 @@ export default function DashboardPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const [reportsRes, settingsRes] = await Promise.all([
+    const [reportsRes, settingsRes, userRes] = await Promise.all([
       supabase
         .from('risk_reports')
         .select('*')
@@ -67,7 +71,17 @@ export default function DashboardPage() {
         .select('*')
         .eq('user_id', user.id)
         .single(),
+      supabase
+        .from('users')
+        .select('telegram_chat_id')
+        .eq('id', user.id)
+        .single(),
     ]);
+
+    if (!userRes.data?.telegram_chat_id) {
+      router.push('/onboarding');
+      return;
+    }
 
     if (reportsRes.data) setReports(reportsRes.data);
     if (settingsRes.data) setSettings(settingsRes.data);
@@ -80,7 +94,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-400 animate-pulse text-lg">Cargando dashboard...</div>
+        <div className="text-slate-400 animate-pulse text-lg">{t('common.loading')}</div>
       </div>
     );
   }
@@ -90,14 +104,14 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold gradient-text">EcoAgent Dashboard</h1>
+          <h1 className="text-2xl font-bold gradient-text">{t('dashboard.title')}</h1>
           <p className="text-slate-400 text-sm">{settings?.location_name ?? 'Manizales, Colombia'}</p>
         </div>
         <a
           href="/dashboard/settings"
           className="text-slate-400 hover:text-green-400 transition-colors"
         >
-          ⚙️ Configuración
+          ⚙️ {t('dashboard.settings')}
         </a>
       </div>
 
@@ -105,7 +119,7 @@ export default function DashboardPage() {
         {/* Section 1 — Current Risk Level */}
         <div className={`glass-card p-8 ${alertStyle.glow}`}>
           <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
-            Nivel de Riesgo Actual
+            {t('dashboard.current_risk')}
           </h2>
           {latestReport ? (
             <>
@@ -116,17 +130,17 @@ export default function DashboardPage() {
                     {latestReport.alert_level}
                   </p>
                   <p className="text-slate-400 text-sm mt-1">
-                    Probabilidad: {(latestReport.risk_probability * 100).toFixed(1)}%
+                    {t('dashboard.probability')}: {(latestReport.risk_probability * 100).toFixed(1)}%
                   </p>
                 </div>
               </div>
               <p className="text-slate-500 text-xs">
-                Último cálculo: {new Date(latestReport.created_at).toLocaleString('es-CO')}
+                {t('dashboard.last_calc')}: {new Date(latestReport.created_at).toLocaleString(language === 'es' ? 'es-CO' : 'en-US')}
               </p>
             </>
           ) : (
             <p className="text-slate-500">
-              No hay reportes aún. Usa <code>/clima</code> en el bot de Telegram.
+              {t('dashboard.no_reports')}
             </p>
           )}
         </div>
@@ -134,7 +148,7 @@ export default function DashboardPage() {
         {/* Section 2 — CIR Chart */}
         <div className="glass-card p-6">
           <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
-            Evolución de Riesgo (últimas 24h)
+            {t('dashboard.evolution')}
           </h2>
           {reports.length > 0 ? (
             <RiskChart
@@ -143,7 +157,7 @@ export default function DashboardPage() {
             />
           ) : (
             <div className="h-64 flex items-center justify-center text-slate-500">
-              Sin datos suficientes para graficar
+              {t('dashboard.no_data')}
             </div>
           )}
         </div>
@@ -151,7 +165,7 @@ export default function DashboardPage() {
         {/* Section 3 — Map */}
         <div className="glass-card p-6">
           <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
-            Ubicación Monitoreada
+            {t('dashboard.location')}
           </h2>
           <div className="h-64 rounded-xl overflow-hidden">
             <RiskMap
@@ -165,16 +179,16 @@ export default function DashboardPage() {
         {/* Section 4 — Report History */}
         <div className="glass-card p-6">
           <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
-            Historial de Reportes
+            {t('dashboard.history')}
           </h2>
           {reports.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-slate-400 border-b border-slate-700/50">
-                    <th className="text-left py-2 px-2">Fecha</th>
-                    <th className="text-left py-2 px-2">Nivel</th>
-                    <th className="text-right py-2 px-2">Probabilidad</th>
+                    <th className="text-left py-2 px-2">{t('dashboard.date')}</th>
+                    <th className="text-left py-2 px-2">{t('dashboard.level')}</th>
+                    <th className="text-right py-2 px-2">{t('dashboard.probability')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -183,7 +197,7 @@ export default function DashboardPage() {
                     return (
                       <tr key={r.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
                         <td className="py-2 px-2 text-slate-400">
-                          {new Date(r.created_at).toLocaleString('es-CO', {
+                          {new Date(r.created_at).toLocaleString(language === 'es' ? 'es-CO' : 'en-US', {
                             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                           })}
                         </td>

@@ -15,16 +15,19 @@ const envSchema = z.object({
     .min(1, 'TELEGRAM_BOT_TOKEN cannot be empty'),
 
   TELEGRAM_ALLOWED_USER_IDS: z
-    .string({ required_error: 'TELEGRAM_ALLOWED_USER_IDS is required' })
-    .transform((val): readonly number[] =>
-      val.split(',').map((id) => {
+    .string()
+    .optional()
+    .default('')
+    .transform((val): readonly number[] => {
+      if (!val) return [];
+      return val.split(',').map((id) => {
         const parsed = parseInt(id.trim(), 10);
         if (Number.isNaN(parsed)) {
           throw new Error(`Invalid Telegram user ID: "${id}"`);
         }
         return parsed;
-      })
-    ),
+      });
+    }),
 
   // ── Required: OpenRouter ───────────────────────────────────
   OPENROUTER_API_KEY: z

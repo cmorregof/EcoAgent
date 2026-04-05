@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,6 +19,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,14 +46,14 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="glass-card p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold gradient-text mb-2">EcoAgent</h1>
-          <p className="text-slate-400">Inicia sesión en tu dashboard</p>
+          <h1 className="text-3xl font-bold gradient-text mb-2">{t('auth.login_title')}</h1>
+          <p className="text-slate-400">{t('auth.login_subtitle')}</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label htmlFor="login-email" className="block text-sm font-medium text-slate-300 mb-1">
-              Email
+              {t('auth.email')}
             </label>
             <input
               id="login-email"
@@ -66,7 +68,7 @@ export default function LoginPage() {
 
           <div>
             <label htmlFor="login-password" className="block text-sm font-medium text-slate-300 mb-1">
-              Contraseña
+              {t('auth.password')}
             </label>
             <input
               id="login-password"
@@ -86,14 +88,14 @@ export default function LoginPage() {
           )}
 
           <button type="submit" disabled={loading} className="btn-primary w-full">
-            {loading ? 'Entrando...' : 'Iniciar sesión'}
+            {loading ? t('common.loading') : t('auth.signin')}
           </button>
         </form>
 
         <p className="text-center text-sm text-slate-400 mt-6">
-          ¿No tienes cuenta?{' '}
+          {t('auth.no_account')}{' '}
           <Link href="/register" className="text-green-400 hover:text-green-300 transition-colors">
-            Regístrate
+            {t('auth.signup')}
           </Link>
         </p>
       </div>

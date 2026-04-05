@@ -144,4 +144,9 @@ export class SupabaseSessionRepository implements ISessionRepository {
       logger.info({ chatId, alert_level: report.alert_level }, 'Risk report written to SaaS dashboard');
     }
   }
+
+  async isUserLinked(chatId: string): Promise<boolean> {
+    const userId = await this.getUserIdByChatId(chatId);
+    return !!userId;
+  }
 }

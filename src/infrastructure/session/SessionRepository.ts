@@ -28,6 +28,7 @@ export interface ISessionRepository {
   appendMessage(chatId: string, message: Message): Promise<void>;
   getHistory(chatId: string, limit?: number): Promise<readonly Message[]>;
   saveReport(chatId: string, report: RiskReport): Promise<void>;
+  isUserLinked(chatId: string): Promise<boolean>;
 }
 
 // ── SQLite Implementation ────────────────────────────────────
@@ -200,5 +201,12 @@ export class SQLiteSessionRepository implements ISessionRepository {
   async saveReport(chatId: string, report: RiskReport): Promise<void> {
     // Only implemented in SupabaseSessionRepository
     logger.debug({ chatId, alert_level: report.alert_level }, 'saveReport ignored in SQLite');
+  }
+
+  async isUserLinked(chatId: string): Promise<boolean> {
+    const row = this.db
+      .prepare('SELECT 1 FROM user_settings WHERE chat_id = ?')
+      .get(chatId);
+    return !!row;
   }
 }

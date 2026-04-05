@@ -17,9 +17,11 @@ import {
   handleConfigurar,
   handleUmbral,
   handleAyuda,
+  handleModelo,
 } from './handlers/commandHandlers.js';
 import { handleText } from './handlers/textHandler.js';
 import type { RiskAnalysisUseCase } from '../../application/RiskAnalysisUseCase.js';
+import type { ModelExplanationUseCase } from '../../application/ModelExplanationUseCase.js';
 import type { ISessionRepository } from '../../infrastructure/session/SessionRepository.js';
 import type { IWeatherService } from '../../domain/ports/IWeatherService.js';
 import type { ISimulationEngine } from '../../domain/ports/ISimulationEngine.js';
@@ -31,6 +33,7 @@ export interface BotDependencies {
   readonly allowedUserIds: readonly number[];
   readonly sessionRepo: ISessionRepository;
   readonly riskAnalysis: RiskAnalysisUseCase;
+  readonly modelExplanation: ModelExplanationUseCase;
   readonly openai: OpenAI;
   readonly weatherService: IWeatherService;
   readonly simulationEngine: ISimulationEngine;
@@ -54,6 +57,7 @@ export function createBot(deps: BotDependencies): Bot<EcoAgentContext> {
   bot.command('configurar', handleConfigurar(deps.sessionRepo));
   bot.command('umbral', handleUmbral(deps.sessionRepo));
   bot.command('ayuda', handleAyuda());
+  bot.command('modelo', handleModelo(deps.modelExplanation));
 
   // ── Natural Language (Agent) Handler ───────────────────────
   bot.on('message:text', handleText(

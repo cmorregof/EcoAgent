@@ -34,12 +34,29 @@ export function createAuthMiddleware(
     if (!ctx.from) return;
 
     const chatId = ctx.chat?.id?.toString();
+    if (!chatId) return;
     const userId = ctx.from.id.toString();
 
-    if (!chatId) return;
+    // 1. Always allow /start and /ayuda (onboarding commands)
+    const command = ctx.message?.text?.split(' ')[0];
+    const isPublicCommand = command === '/start' || command === '/ayuda';
 
-    // Transitional: check whitelist until Supabase auth is live
-    if (allowedUserIds.length > 0 && !allowedUserIds.includes(ctx.from.id)) {
+    if (isPublicCommand) {
+      try {
+        const session = await sessionRepo.getOrCreate(chatId, userId);
+        ctx.session = session;
+        await next();
+      } catch (err) {
+        logger.error({ err, chatId }, 'Failed to load public session');
+      }
+      return;
+    }
+
+    // 2. Multi-tier Authorization Check
+    const isWhitelisted = allowedUserIds.length > 0 && allowedUserIds.includes(ctx.from.id);
+    const isLinked = await sessionRepo.isUserLinked(chatId);
+
+    if (!isWhitelisted && !isLinked) {
       logger.warn(
         { userId, username: ctx.from.username },
         'Unauthorized access attempt blocked'

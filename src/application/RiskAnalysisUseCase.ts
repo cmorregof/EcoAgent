@@ -72,17 +72,22 @@ export class RiskAnalysisUseCase {
 
     // 4. Generate AI Executive Summary
     let aiSummary = '';
+    const isEn = settings.language === 'en';
+    
     try {
+      const systemPrompt = isEn
+        ? 'You are an expert in regional geology of Colombia and landslide risk management. You receive raw data (temperature °C, precipitation mm, humidity %, risk probability %, alert level) for the user\'s location, specifically in the mountainous Andean region. You must write a professional, direct, and authoritative executive summary of maximum 2 to 3 lines. Explain what these data mean for the stability of the terrain in the Colombian context. NEVER use markdown (e.g. asterisks or bold) or greetings. Respond in English.'
+        : 'Eres un experto en geología regional de Colombia y gestión de riesgo de deslizamientos. Recibes datos crudos (temperatura en °C, precipitación en mm, humedad %, probabilidad de riesgo %, nivel de alerta) de la ubicación del usuario, específicamente en la región andina montañosa. Debes escribir un resumen ejecutivo profesional, directo y autoritario de máximo 2 a 3 líneas. Explica qué significan estos datos para la estabilidad del terreno en el contexto colombiano. NUNCA uses markdown (ej. asteriscos o negritas) ni saludes. Responde en Español.';
+
       const summaryRes = await this.openai.chat.completions.create({
         model: appSettings.OPENROUTER_MODEL,
         messages: [
-          {
-            role: 'system',
-            content: 'Eres un experto en climatología y gestión de riesgo de deslizamientos. Recibes datos crudos (temperatura en °C, precipitación en mm, humedad %, probabilidad de riesgo %, nivel de riesgo de LOW a CRITICAL) correspondientes al estado actual para alertar al usuario de su ubicación. Debes escribir un resumen ejecutivo simple y directo de máximo 2 a 3 líneas explicando qué significan estos datos y si debe preocuparse. NUNCA uses markdown (ej. asteriscos o negritas) ni saludes.'
-          },
+          { role: 'system', content: systemPrompt },
           {
             role: 'user',
-            content: `Datos de entrada: Temp: ${weather.temperature_c}°C, Precipitación: ${weather.precipitation_mm}mm, Humedad: ${weather.humidity_pct}%. Probabilidad de deslizamiento: ${(simulation.risk_probability * 100).toFixed(1)}%. Nivel de Alerta: ${simulation.alert_level}.`
+            content: isEn 
+              ? `Input Data: Temp: ${weather.temperature_c}°C, Precip: ${weather.precipitation_mm}mm, Humidity: ${weather.humidity_pct}%. Risk Probability: ${(simulation.risk_probability * 100).toFixed(1)}%. Alert Level: ${simulation.alert_level}.`
+              : `Datos de entrada: Temp: ${weather.temperature_c}°C, Precipitación: ${weather.precipitation_mm}mm, Humedad: ${weather.humidity_pct}%. Probabilidad de deslizamiento: ${(simulation.risk_probability * 100).toFixed(1)}%. Nivel de Alerta: ${simulation.alert_level}.`
           }
         ],
         temperature: 0.3,
@@ -91,7 +96,9 @@ export class RiskAnalysisUseCase {
       aiSummary = summaryRes.choices[0]?.message?.content?.trim() || '';
     } catch (err) {
       logger.error({ err }, 'Failed to generate AI summary for risk report');
-      aiSummary = 'No fue posible generar el resumen con IA en este momento.';
+      aiSummary = isEn 
+        ? 'AI summary could not be generated at this time.'
+        : 'No fue posible generar el resumen con IA en este momento.';
     }
 
     // 5. Voice synthesis — only for HIGH/CRITICAL + voice_enabled
@@ -101,7 +108,7 @@ export class RiskAnalysisUseCase {
       simulation.alert_level === 'HIGH' || simulation.alert_level === 'CRITICAL';
 
     if (isHighRisk && settings.voice_enabled) {
-      const summaryText = this.buildVoiceSummary(weather, simulation);
+      const summaryText = this.buildVoiceSummary(weather, simulation, settings.language);
       const buffer = await this.voiceService.synthesize(summaryText);
       if (buffer) {
         audioBuffer = buffer;
@@ -109,7 +116,7 @@ export class RiskAnalysisUseCase {
     }
 
     // 6. Save to conversation history
-    const reportMessage = this.buildReportMessage(weather, simulation, aiSummary);
+    const reportMessage = this.buildReportMessage(weather, simulation, aiSummary, settings.language);
     await this.sessionRepo.appendMessage(chatId, {
       role: 'assistant',
       content: reportMessage,
@@ -138,7 +145,18 @@ export class RiskAnalysisUseCase {
     return report;
   }
 
-  private buildVoiceSummary(weather: WeatherData, sim: CIRSimulationOutput): string {
+  private buildVoiceSummary(weather: WeatherData, sim: CIRSimulationOutput, lang: string): string {
+    if (lang === 'en') {
+      return (
+        `Climate risk alert. ` +
+        `Level: ${sim.alert_level}. ` +
+        `Risk probability: ${(sim.risk_probability * 100).toFixed(1)} percent. ` +
+        `Current temperature: ${weather.temperature_c} degrees. ` +
+        `Precipitation: ${weather.precipitation_mm} millimeters. ` +
+        `Humidity: ${weather.humidity_pct} percent. ` +
+        `Constant monitoring is recommended.`
+      );
+    }
     return (
       `Alerta de riesgo climático. ` +
       `Nivel: ${sim.alert_level}. ` +
@@ -150,18 +168,27 @@ export class RiskAnalysisUseCase {
     );
   }
 
-  private buildReportMessage(weather: WeatherData, sim: CIRSimulationOutput, aiSummary: string): string {
+  private buildReportMessage(weather: WeatherData, sim: CIRSimulationOutput, aiSummary: string, lang: string): string {
+    const isEn = lang === 'en';
     const emoji =
       sim.alert_level === 'CRITICAL' ? '🔴' :
       sim.alert_level === 'HIGH' ? '🟠' :
       sim.alert_level === 'MEDIUM' ? '🟡' : '🟢';
 
+    const header = isEn ? 'Risk Analysis' : 'Análisis de Riesgo';
+    const probLabel = isEn ? 'Probability' : 'Probabilidad';
+    const saturationLabel = isEn ? 'Mean saturation' : 'Saturación media';
+    const weatherLabel = isEn ? 'Temp' : 'Temp';
+    const rainLabel = isEn ? 'Rain' : 'Lluvia';
+    const humidityLabel = isEn ? 'Humidity' : 'Humedad';
+    const aiLabel = isEn ? 'AI Executive Summary' : 'Resumen Ejecutivo (IA)';
+
     return (
-      `${emoji} Análisis de Riesgo — ${sim.alert_level}\n` +
-      `Probabilidad: ${(sim.risk_probability * 100).toFixed(1)}%\n` +
-      `Saturación media: ${sim.mean_saturation.toFixed(4)}\n` +
-      `Temp: ${weather.temperature_c}°C | Lluvia: ${weather.precipitation_mm}mm | Humedad: ${weather.humidity_pct}%\n\n` +
-      `💡 *Resumen Ejecutivo (IA)*:\n${aiSummary}`
+      `${emoji} ${header} — ${sim.alert_level}\n` +
+      `${probLabel}: ${(sim.risk_probability * 100).toFixed(1)}%\n` +
+      `${saturationLabel}: ${sim.mean_saturation.toFixed(4)}\n` +
+      `${weatherLabel}: ${weather.temperature_c}°C | ${rainLabel}: ${weather.precipitation_mm}mm | ${humidityLabel}: ${weather.humidity_pct}%\n\n` +
+      `💡 *${aiLabel}*:\n${aiSummary}`
     );
   }
 }

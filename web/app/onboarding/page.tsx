@@ -11,12 +11,14 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function OnboardingPage() {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleLink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,27 +63,27 @@ export default function OnboardingPage() {
       <div className="glass-card p-8 w-full max-w-lg">
         <div className="text-center mb-8">
           <div className="text-5xl mb-4">🤖</div>
-          <h1 className="text-2xl font-bold mb-2">Vincula tu Telegram</h1>
-          <p className="text-slate-400">Conecta tu bot para recibir alertas en tiempo real</p>
+          <h1 className="text-2xl font-bold mb-2">{t('onboarding.title')}</h1>
+          <p className="text-slate-400">{t('onboarding.subtitle')}</p>
         </div>
 
         <div className="bg-slate-800/50 rounded-xl p-6 mb-6 space-y-4">
           <div className="flex items-start gap-3">
             <span className="bg-green-500/20 text-green-400 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
             <p className="text-slate-300">
-              Busca <span className="font-mono text-green-400">@velveten_eco_agent_bot</span> en Telegram
+              {t('onboarding.step1')}
             </p>
           </div>
           <div className="flex items-start gap-3">
             <span className="bg-green-500/20 text-green-400 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
             <p className="text-slate-300">
-              Envía el comando <span className="font-mono text-green-400">/start</span>
+              {t('onboarding.step2')}
             </p>
           </div>
           <div className="flex items-start gap-3">
             <span className="bg-green-500/20 text-green-400 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
             <p className="text-slate-300">
-              El bot te dará un código. Pégalo aquí abajo:
+              {t('onboarding.step3')}
             </p>
           </div>
         </div>
@@ -92,7 +94,7 @@ export default function OnboardingPage() {
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="Tu código de Telegram"
+            placeholder={t('onboarding.placeholder')}
             className="w-full text-center text-2xl tracking-widest font-mono"
             maxLength={20}
           />
@@ -104,15 +106,19 @@ export default function OnboardingPage() {
           )}
 
           <button type="submit" disabled={loading} className="btn-primary w-full">
-            {loading ? 'Vinculando...' : 'Vincular Telegram'}
+            {loading ? t('onboarding.linking') : t('onboarding.button')}
           </button>
         </form>
 
         <button
-          onClick={() => router.push('/dashboard')}
-          className="w-full text-center text-sm text-slate-400 mt-4 hover:text-slate-300 transition-colors"
+          onClick={async () => {
+            const supabase = createClient();
+            await supabase.auth.signOut();
+            router.push('/login');
+          }}
+          className="w-full text-center text-sm text-slate-500 mt-6 hover:text-slate-400 transition-colors"
         >
-          Omitir por ahora →
+          {t('common.not_your_account')} {t('common.logout')}
         </button>
       </div>
     </div>

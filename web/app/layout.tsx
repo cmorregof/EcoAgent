@@ -7,6 +7,7 @@
 
 import type { Metadata } from 'next';
 import './globals.css';
+import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 
 export const metadata: Metadata = {
   title: 'EcoAgent — Plataforma de Riesgo Climático',
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="min-h-screen antialiased">
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
