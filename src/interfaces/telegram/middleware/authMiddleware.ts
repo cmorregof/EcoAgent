@@ -52,12 +52,8 @@ export function createAuthMiddleware(
       return;
     }
 
-    // 2. Multi-tier Authorization Check
-    const fixedAllowedIds = [559099396]; // Mateo (MCC_07) - Trusted Tester
-    const isWhitelisted = 
-      (allowedUserIds.length > 0 && allowedUserIds.includes(ctx.from.id)) ||
-      fixedAllowedIds.includes(ctx.from.id);
-
+    // 2. Hybrid Authorization Check (Whitelist OR Linked Client)
+    const isWhitelisted = allowedUserIds.length > 0 && allowedUserIds.includes(ctx.from.id);
     const isLinked = await sessionRepo.isUserLinked(chatId);
 
     if (!isWhitelisted && !isLinked) {
@@ -65,9 +61,14 @@ export function createAuthMiddleware(
         { userId, username: ctx.from.username },
         'Unauthorized access attempt blocked'
       );
+      
+      const name = ctx.from.first_name || 'usuario';
       await ctx.reply(
-        `Hola ${ctx.from.first_name}. Para usar todas las funciones de EcoAgent (como /clima), regístrate en la plataforma web y vincula tu cuenta.\n\n` +
-        `Tu ID de Telegram es: \`${userId}\` (úsalo para vincularte).`
+        `Hola ${name}. EcoAgent es una plataforma SaaS privada.\n\n` +
+        `Para desbloquear todas las funciones:\n` +
+        `1. Regístrate en la plataforma web.\n` +
+        `2. Vincula tu Telegram usando tu ID: \`${userId}\`.\n\n` +
+        `Puedes usar /modelo para aprender cómo funcionamos.`
       );
       return;
     }

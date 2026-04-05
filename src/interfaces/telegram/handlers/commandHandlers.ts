@@ -30,13 +30,13 @@ export function handleStart() {
 
     await ctx.reply(
       `¡Hola ${name}! 👋\n\n` +
-      `Soy *EcoAgent*, tu asistente de riesgo climático e IA.\n\n` +
-      `📍 Estoy monitoreando *Manizales, Colombia* por defecto.\n\n` +
-      `🔑 **Tu código secreto de vinculación web es:** \`${chatId}\`\n\n` +
-      `Comandos disponibles:\n` +
+      `Soy *EcoAgent*, tu analista de riesgo climático regional.\n\n` +
+      `🛡️ Esta es una plataforma privada. Para activar tu cuenta, ve al Panel Web y vincula este código:\n\n` +
+      `🆔 **Código de Vinculación:** \`${chatId}\`\n\n` +
+      `Una vez vinculado, podrás usar:\n` +
       `/clima — Análisis de riesgo en tiempo real\n` +
-      `/configurar — Ver y cambiar tu configuración\n` +
-      `/ayuda — Lista completa de comandos`,
+      `/configurar — Ajustes de voz y alertas\n` +
+      `/modelo — Explicación científica del sistema`,
       { parse_mode: 'Markdown' }
     );
   };
