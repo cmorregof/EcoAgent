@@ -38,12 +38,13 @@ class CIRSimulationInput(BaseModel):
     )
     temperature_c: float = Field(
         ...,
-        description="Air temperature in °C. Higher temps increase evapotranspiration, reducing soil saturation.",
+        ge=-50,
+        le=60,
+        description="Air temperature in °C. Physical range for surface air. Higher temps increase evapotranspiration, reducing soil saturation.",
     )
     n_simulations: int = Field(
         default=1000,
         ge=1,
-        le=10000,
         description="Number of Monte Carlo paths to simulate. More paths = higher statistical confidence.",
     )
     time_horizon_hours: float = Field(
@@ -61,12 +62,6 @@ class CIRSimulationInput(BaseModel):
             )
         return v
 
-    @field_validator("precipitation_mm")
-    @classmethod
-    def check_precipitation(cls, v: float) -> float:
-        if v < 0:
-            raise ValueError("precipitation_mm cannot be negative")
-        return v
 
 
 class CIRSimulationOutput(BaseModel):

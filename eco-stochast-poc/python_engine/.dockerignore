@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*.pyo
+.env
+.env.*
+.pytest_cache
+tests/
+*.ipynb
+.git
+*.log

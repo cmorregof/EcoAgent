@@ -6,7 +6,7 @@
 # 📁 ARCHIVO: eco-stochast-poc/python_engine/config.py
 # ---
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -22,10 +22,13 @@ class Settings(BaseSettings):
     cir_volatility: float = 0.1             # Parameter 'sigma': diffusion coefficient
 
     # Simulation Limits
-    max_simulations: int = 10000
+    max_simulations: int = 10000  # Single source of truth for n_simulations upper bound
 
-    class Config:
-        env_prefix = "CIR_"
+    model_config = SettingsConfigDict(
+        env_prefix="CIR_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
 
 
 settings = Settings()

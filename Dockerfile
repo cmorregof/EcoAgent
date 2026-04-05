@@ -49,4 +49,11 @@ ENV DB_PATH=/app/data/memory.db
 # Create data directory for SQLite persistence
 RUN mkdir -p /app/data
 
+# Non-root user for security
+RUN addgroup --system appgroup && \
+    adduser --system --ingroup appgroup appuser && \
+    chown -R appuser:appgroup /app/data
+
+USER appuser
+
 CMD ["npm", "start"]
