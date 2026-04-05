@@ -11,7 +11,7 @@ import type { ISimulationEngine, CIRSimulationOutput } from '../domain/ports/ISi
 import type { IVoiceService } from '../domain/ports/IVoiceService.js';
 import type { IWeatherService, WeatherData } from '../domain/ports/IWeatherService.js';
 import type { ISessionRepository } from '../infrastructure/session/SessionRepository.js';
-import type { AlertThreshold } from '../domain/models/UserSession.js';
+import { type AlertThreshold, DEFAULT_USER_SETTINGS } from '../domain/models/UserSession.js';
 import { logger } from '../config/logger.js';
 import type OpenAI from 'openai';
 import { settings as appSettings } from '../config/settings.js';
@@ -50,11 +50,8 @@ export class RiskAnalysisUseCase {
   async analyzeRisk(chatId: string): Promise<RiskReport> {
     const startTime = Date.now();
 
-    // 1. Load user settings
-    const settings = await this.sessionRepo.getSettings(chatId);
-    if (!settings) {
-      throw new Error(`No session found for chat_id: ${chatId}`);
-    }
+    // 1. Load user settings — fallback to defaults if not found in SaaS DB
+    const settings = (await this.sessionRepo.getSettings(chatId)) ?? DEFAULT_USER_SETTINGS;
 
     logger.info({ chatId, lat: settings.location_lat, lon: settings.location_lon }, 'Starting risk analysis');
 
