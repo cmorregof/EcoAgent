@@ -1,4 +1,33 @@
+# Secrets — NEVER commit these
 .env
 service-account.json
+service-account-climate.json
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# Next.js local secrets
+web/.env.local
+web/.env.*.local
+
+# Test scripts with hardcoded keys
+test_openai.js
+
+# Build output
+dist/
+.next/
+
+# Dependencies
 node_modules/
 .venv/
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

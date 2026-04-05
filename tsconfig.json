@@ -5,10 +5,36 @@
     "moduleResolution": "NodeNext",
     "outDir": "./dist",
     "rootDir": "./src",
+
+    // ── Strict Type Safety ───────────────────────────────────────
+    // Enables all strict type checking options (strictNullChecks,
+    // strictFunctionTypes, strictBindCallApply, etc.) as a single flag.
     "strict": true,
+
+    // Prevents obj[key] from being typed as T — forces T | undefined.
+    // Catches the #1 source of runtime "undefined is not a function" errors
+    // when accessing arrays or records by index.
+    "noUncheckedIndexedAccess": true,
+
+    // Every code path in a function with a return type must explicitly return.
+    // Catches silent bugs where a branch falls through and returns undefined.
+    "noImplicitReturns": true,
+
+    // Forces every case in a switch to break, return, or throw.
+    // Prevents accidental fall-through bugs that are extremely hard to debug.
+    "noFallthroughCasesInSwitch": true,
+
+    // Distinguishes between { key?: T } (key may be missing) and { key: T | undefined }
+    // (key present but undefined). Enforces precise optional property semantics.
+    "exactOptionalPropertyTypes": true,
+
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts", "node_modules", "dist"]
 }

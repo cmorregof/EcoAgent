@@ -1,24 +1,94 @@
-import { startBot } from './bot/index.js';
-import { startWeatherAlertService } from './services/weatherAlerts.js';
-import { initializeRemoteTools } from './tools/index.js';
+// ---
+// 📚 POR QUÉ: Entry point que compone el DI container y arranca el bot.
+//    Aquí se construye el "composition root" de Clean Architecture: se instancian
+//    todas las implementaciones concretas y se inyectan en las clases que las necesitan.
+//    Sin este punto central, las dependencias estarían dispersas y acopladas.
+// 📁 ARCHIVO: src/index.ts
+// ---
 
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Rechazo de promesa no capturado en:', promise, 'razón:', reason);
+import OpenAI from 'openai';
+import { settings } from './config/settings.js';
+import { logger } from './config/logger.js';
+
+// ── Infrastructure ───────────────────────────────────────────
+import { PythonCIREngine } from './infrastructure/simulation/PythonCIREngine.js';
+import { ElevenLabsService } from './infrastructure/voice/ElevenLabsService.js';
+import { OpenMeteoService } from './infrastructure/weather/OpenMeteoService.js';
+import { SupabaseSessionRepository } from './infrastructure/session/SupabaseSessionRepository.js';
+
+// ── Application ──────────────────────────────────────────────
+import { RiskAnalysisUseCase } from './application/RiskAnalysisUseCase.js';
+
+// ── Interface ────────────────────────────────────────────────
+import { createBot, startBot } from './interfaces/telegram/bot.js';
+
+// ── Global error handlers ────────────────────────────────────
+process.on('unhandledRejection', (reason) => {
+  logger.fatal({ err: reason }, 'Unhandled promise rejection');
 });
 
 process.on('uncaughtException', (error) => {
-    console.error('Excepción no capturada:', error);
+  logger.fatal({ err: error }, 'Uncaught exception — shutting down');
+  process.exit(1);
 });
 
-// Inicializar herramientas remotas (MCP)
-await initializeRemoteTools();
+// ── Composition Root ─────────────────────────────────────────
+async function main(): Promise<void> {
+  logger.info('Composing EcoAgent dependency graph...');
 
-// Arrancar Bot
-startBot().catch(console.error);
+  // 1. Infrastructure layer
+  const simulationEngine = new PythonCIREngine(settings.PYTHON_API_URL);
+  const voiceService = new ElevenLabsService(
+    settings.ELEVENLABS_API_KEY,
+    settings.ELEVENLABS_VOICE_ID
+  );
+  const weatherService = new OpenMeteoService();
+  
+  if (!settings.SUPABASE_URL || !settings.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase URL and Service Role Key are required for SaaS mode');
+  }
+  const sessionRepo = new SupabaseSessionRepository(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY);
 
-// Arrancar Servicio de Alertas (Dashboard de Clima)
-startWeatherAlertService();
+  // 2. Setup AI Client
+  const openai = new OpenAI({
+    apiKey: settings.OPENROUTER_API_KEY,
+    baseURL: 'https://openrouter.ai/api/v1',
+  });
 
-// Arrancar API local para el Frontend Dashboard
-import { startDashboardApi } from './services/dashboardApi.js';
-startDashboardApi();
+  // 3. Application layer (use cases)
+  const riskAnalysis = new RiskAnalysisUseCase(
+    simulationEngine,
+    voiceService,
+    weatherService,
+    sessionRepo,
+    openai
+  );
+
+  // 3. Interface layer (Telegram bot)
+  const bot = createBot({
+    token: settings.TELEGRAM_BOT_TOKEN,
+    allowedUserIds: settings.TELEGRAM_ALLOWED_USER_IDS,
+    sessionRepo,
+    riskAnalysis,
+    openai,
+    weatherService,
+    simulationEngine,
+    voiceService,
+  });
+
+  // 4. Health check Python engine
+  const engineHealthy = await simulationEngine.healthCheck();
+  if (engineHealthy) {
+    logger.info('Python CIR engine is healthy');
+  } else {
+    logger.warn('Python CIR engine is not reachable — /clima will fail until it is started');
+  }
+
+  // 5. Start bot
+  await startBot(bot);
+}
+
+main().catch((err) => {
+  logger.fatal({ err }, 'Failed to start EcoAgent');
+  process.exit(1);
+});
