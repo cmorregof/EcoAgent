@@ -16,19 +16,49 @@ export class SupabaseSessionRepository implements ISessionRepository {
       },
     });
     logger.info('Supabase session repository initialized');
+
+    // Health check: count users
+    this.supabase.from('users').select('id', { count: 'exact', head: true }).then(({ count, error }) => {
+      if (error) logger.error({ error }, 'Failed to perform initial user count health check');
+      else logger.info({ count }, 'Supabase session repository health check: total users');
+    });
   }
 
-  /** Gets the actual user UUID from users table by telegram_chat_id */
+  async isUserLinked(chatId: string): Promise<boolean> {
+    logger.debug({ chatId }, 'Checking if user is linked in Supabase...');
+    const userId = await this.getUserIdByChatId(chatId);
+    const linked = !!userId;
+    logger.info({ chatId, linked, userId }, 'User link status check completed');
+    return linked;
+  }
+
   private async getUserIdByChatId(chatId: string): Promise<string | null> {
+    const cleanChatId = chatId.trim();
+    
     const { data, error } = await this.supabase
       .from('users')
       .select('id')
-      .eq('telegram_chat_id', chatId)
-      .single();
+      .eq('telegram_chat_id', cleanChatId)
+      .maybeSingle();
 
-    if (error || !data) {
+    if (error) {
+      logger.error(
+        { error, chatId: cleanChatId, code: error.code, message: error.message },
+        'SUPABASE_QUERY_ERROR'
+      );
       return null;
     }
+
+    if (!data) {
+      logger.warn({ chatId: cleanChatId }, 'SUPABASE_NOT_FOUND: No user has this telegram_chat_id');
+      
+      // DIAGNOSTIC: Peek at the first 3 users to see what IDs they have
+      const { data: peek } = await this.supabase.from('users').select('full_name, telegram_chat_id').limit(3);
+      logger.debug({ peek }, 'SUPABASE_DIAGNOSTIC_PEEK: First 3 users in table');
+      
+      return null;
+    }
+
     return data.id;
   }
 
@@ -145,8 +175,4 @@ export class SupabaseSessionRepository implements ISessionRepository {
     }
   }
 
-  async isUserLinked(chatId: string): Promise<boolean> {
-    const userId = await this.getUserIdByChatId(chatId);
-    return !!userId;
-  }
 }
