@@ -1,74 +1,196 @@
-<div align="center">
-  <h1>🌍 EcoAgent: AI-Powered Stochastic Climate Risk System</h1>
-  <p><i>An advanced multi-agent system for real-time landslide prediction using stochastic modeling (CIR) and LLM orchestration.</i></p>
-  
-  [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel)](https://eco-agent-d0b9gco9q-cmorregofs-projects.vercel.app/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-  [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-  [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-</div>
+# 🌍 EcoAgent: AI-Powered Stochastic Climate Risk Platform
+
+*A production SaaS system for real-time landslide risk prediction, 
+combining stochastic differential equations with LLM orchestration 
+and multimodal alerts.*
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel)](https://eco-agent-five.vercel.app)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 ---
 
-## 🎯 The Problem & Our Solution
-Mountainous regions (like Manizales, Colombia) face constant threats from rain-induced landslides. Traditional alerting systems rely on static thresholds. 
+## 🎯 The Problem
 
-**EcoAgent** solves this by treating soil moisture dynamics as a stochastic process. By bridging **advanced mathematics (SDEs)** with **Agentic AI**, the system not only simulates risk but also reasons through live data to trigger intelligent, multi-modal alerts.
+Mountainous regions like **Manizales, Colombia** face constant 
+landslide threats from rain-induced soil saturation. Traditional 
+alerting systems rely on static thresholds that ignore the 
+stochastic nature of soil moisture dynamics.
 
-## 🚀 Key Features
-- **🧠 Agentic Orchestration:** Intelligent decision-making powered by **GPT-4o-mini** and **Llama 3.3** using LangChain.
-- **📈 Stochastic Math Engine:** Uses the *Euler-Maruyama* method to solve the *Cox-Ingersoll-Ross (CIR)* equation for soil saturation modeling.
-- **🌤️ Live Data Integration:** Real-time environmental metrics ingestion via the Open-Meteo API.
-- **🎙️ Multimodal Alerts:** Automated Telegram Bot alerts and premium voice synthesis via ElevenLabs.
-- **☁️ Cloud Native:** Fully containerized with Docker and deployed on Vercel (Frontend) and FastAPI (Backend).
+**EcoAgent** models soil saturation as a mean-reverting stochastic 
+process, runs Monte Carlo simulations in real time, and delivers 
+risk assessments through an agentic LLM that reasons over live 
+meteorological data — never inventing values.
 
-## 📐 Architecture Flow
-*(Nota para ti: Aquí debes entrar a Eraser.io, hacer un diagrama simple de cómo se conectan el Frontend, FastAPI, LangChain y ElevenLabs, tomarle foto y subirla aquí como `![Architecture](./docs/arch.png)`)*
+---
 
-## 🧪 The Math Behind The AI
-Instead of deterministic limits, our Python engine calculates soil moisture ($X_t$) using the **Cox-Ingersoll-Ross (CIR)** model:
+## 🏗️ System Architecture
+```mermaid
+graph TB
+    subgraph User["👤 User"]
+        TG[Telegram Chat]
+        WEB[Web Dashboard\neco-agent-five.vercel.app]
+    end
 
-$$dX_t = a(b - X_t)dt + \sigma \sqrt{X_t} dW_t$$
+    subgraph Vercel["☁️ Vercel — Frontend"]
+        NEXT[Next.js 14\nApp Router]
+        AUTH[Supabase Auth\nEmail Registration]
+    end
 
-Where the AI agent interprets the resulting probability distributions to assess whether a critical failure threshold is imminent.
+    subgraph Railway["🚂 Railway — Backend"]
+        subgraph Bot["TypeScript Bot Service"]
+            GRAMMY[Grammy\nTelegram Router]
+            MIDDLEWARE[Auth Middleware\nSession Isolation by chat_id]
+            USECASE[RiskAnalysisUseCase\nClean Architecture]
+            TOOLS[Agent Tools\nTool-First Anti-Hallucination]
+        end
 
-## 💻 Quick Start
+        subgraph Python["Python Engine Service"]
+            FASTAPI[FastAPI]
+            CIR[CIR Simulator\nEuler-Maruyama]
+            MONTECARLO[Monte Carlo\nn=1000 paths]
+        end
+    end
 
-**1. Clone the repository**
-```bash
-git clone https://github.com/The-Velveteen-Project/EcoAgent.git
-cd EcoAgent
+    subgraph External["🌐 External APIs"]
+        METEO[Open-Meteo\nReal-time Weather]
+        OPENROUTER[OpenRouter\nGPT-4o-mini / Llama 3.3]
+        ELEVENLABS[ElevenLabs\nVoice Synthesis]
+    end
+
+    subgraph DB["🗄️ Supabase"]
+        PGDB[(PostgreSQL\nusers / user_settings\nrisk_reports)]
+    end
+
+    TG -->|/clima /start| GRAMMY
+    WEB <-->|Auth + Dashboard| NEXT
+    NEXT <-->|RLS Policies| PGDB
+    GRAMMY --> MIDDLEWARE
+    MIDDLEWARE -->|Loads UserSession| PGDB
+    MIDDLEWARE --> USECASE
+    USECASE --> TOOLS
+    TOOLS -->|get_weather| METEO
+    TOOLS -->|simulate_risk| FASTAPI
+    TOOLS -->|LLM reasoning| OPENROUTER
+    TOOLS -->|send_voice| ELEVENLABS
+    FASTAPI --> CIR
+    CIR --> MONTECARLO
+    USECASE -->|Saves RiskReport| PGDB
+    PGDB -->|Realtime update| NEXT
 ```
 
-2. **Environment Configuration:**
-   Copy the example environment file and fill in your credentials:
-   ```bash
-   cp .env.example .env
-   ```
-   > 🔑 **Note:** You will need API keys for **Telegram**, **OpenRouter**, and **ElevenLabs**.
+---
 
-3. **Launch with Docker (Production Ready)**
-     ```bash
-     docker-compose up -d
-     ```
-   * **Manual Development:**
-     ```bash
-     npm run dev
-     ```
+## 🧮 The Math: Cox-Ingersoll-Ross Model
+
+Soil moisture $X_t$ is modeled as a mean-reverting stochastic 
+process:
+
+$$dX_t = a(b - X_t)\,dt + \sigma\sqrt{X_t}\,dW_t$$
+
+| Parameter | Meaning | Default (Manizales) |
+|---|---|---|
+| $a$ | Mean-reversion speed | 0.5 |
+| $b$ | Long-term mean saturation | 0.4 |
+| $\sigma$ | Volatility coefficient | 0.1 |
+| $W_t$ | Wiener process (Brownian motion) | — |
+
+The Euler-Maruyama discretization runs 1,000 Monte Carlo paths 
+to compute $P(X_t > X_{critical})$, which maps to alert levels:
+`LOW → MEDIUM → HIGH → CRITICAL`.
 
 ---
 
-## 🧪 Technical Background
-The core engine solves soil moisture dynamics using the **Cox-Ingersoll-Ross (CIR)** stochastic process:
+## 🚀 Key Features
 
-$$dX_t = a(b - X_t)dt + \sigma \sqrt{X_t} dW_t$$
-
-This allows the agent to predict the probability of soil failure based on rainfall intensity and real-time saturation data, providing a scientific basis for landslide alerts.
+- **Hexagonal Architecture:** Domain ports isolate math logic, 
+  LLM logic, and voice logic — each independently testable
+- **Tool-First Anti-Hallucination:** The LLM cannot mention risk 
+  values without first invoking `get_weather()` or 
+  `simulate_risk()` — enforced at the system prompt level
+- **Multi-User Session Isolation:** Each Telegram `chat_id` gets 
+  a completely independent session — no context leakage between users
+- **Typed Config Validation:** Zod (TypeScript) and 
+  pydantic-settings (Python) validate all environment variables 
+  at startup — fail fast, never fail silently
+- **Graceful Degradation:** If ElevenLabs is unavailable, 
+  the bot responds with text only — voice is always optional
 
 ---
 
-<div align="center">
-<b>Developed by Carlos M. Orrego | Lead AI Researcher @ The Velveteen Project</b>
-</div>
+## 🛠️ Tech Stack
 
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 14, Tailwind CSS, Leaflet, Recharts |
+| Auth & DB | Supabase (PostgreSQL + RLS + Realtime) |
+| Bot | TypeScript, Grammy, Grammy Files |
+| LLM | OpenRouter (GPT-4o-mini / Llama 3.3) |
+| Math Engine | Python, FastAPI, NumPy (Euler-Maruyama) |
+| Voice | ElevenLabs |
+| Weather | Open-Meteo (free, no API key) |
+| Deployment | Vercel (frontend) + Railway (backend) |
+| Containers | Docker, Docker Compose |
 
+---
+
+## 💻 Local Setup
+```bash
+# 1. Clone
+git clone https://github.com/The-Velveteen-Project/EcoAgent.git
+cd EcoAgent
+
+# 2. Configure environment
+cp .env.example .env
+# Fill in: TELEGRAM_BOT_TOKEN, OPENROUTER_API_KEY,
+#          ELEVENLABS_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+
+# 3. Run with Docker
+docker-compose up -d
+
+# 4. Frontend (separate terminal)
+cd web && npm install && npm run dev
+```
+
+**Required API keys:** Telegram (BotFather), OpenRouter, 
+ElevenLabs, Supabase
+
+---
+
+## 🧪 Running Tests
+```bash
+# TypeScript tests
+npm test
+
+# With coverage
+npm run test:coverage
+
+# Type checking
+npm run typecheck
+```
+
+---
+
+## 🏛️ Architecture Decisions
+
+**Why Clean Architecture?** The CIR simulation, the LLM reasoning, 
+and the voice synthesis are independent concerns. If we swap 
+ElevenLabs for another provider, only `ElevenLabsService.ts` 
+changes — zero impact on business logic.
+
+**Why Zod for config?** `process.env` returns `string | undefined`. 
+Zod validates and types every variable at startup, so the rest 
+of the codebase works with fully typed `settings.X` — no optional 
+chaining on environment variables.
+
+**Why tool-first for the LLM?** Climate risk systems must not 
+hallucinate numbers. Constraining the agent to call tools before 
+stating values is a hard architectural guarantee, not a prompt 
+suggestion.
+
+---
+
+**Developed by Carlos M. Orrego**  
+*AI Engineer & Applied Mathematician — The Velveteen Project*  
+[eco-agent-five.vercel.app](https://eco-agent-five.vercel.app)
