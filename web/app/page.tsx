@@ -34,12 +34,8 @@ export default function LandingPage() {
           </div>
 
           <div className="wordmark-lockup">
-            <div className="wordmark-rabbit">
-              <img 
-                src="/VELVETEEN.svg" 
-                alt="Velveteen Logo" 
-                className="w-16 h-16 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] opacity-90"
-              />
+            <div className="globe-art" style={{ filter: 'drop-shadow(0 0 12px rgba(59,130,246,0.3))' }}>
+              🌧️
             </div>
             <div className="wordmark-text">
               <span className="wordmark-the">THE VELVETEEN PROJECT</span>
