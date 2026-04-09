@@ -34,13 +34,11 @@ export default function LandingPage() {
           </div>
 
           <div className="wordmark-lockup">
-            <div className="globe-art overflow-hidden rounded-xl border border-obsidian-outline-var/50 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+            <div className="wordmark-rabbit">
               <img 
-                src="/logo-ecoagent.jpeg" 
-                alt="EcoAgent Logo" 
-                width={80} 
-                height={80} 
-                className="object-cover mix-blend-screen"
+                src="/VELVETEEN.svg" 
+                alt="Velveteen Logo" 
+                className="w-16 h-16 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] opacity-90"
               />
             </div>
             <div className="wordmark-text">
