@@ -9,21 +9,24 @@ module.exports = {
     extend: {
       colors: {
         risk: {
-          low: '#22c55e',
-          medium: '#eab308',
+          low: '#4ade80',    /* success */
+          medium: '#f5c347', /* warn */
           high: '#f97316',
-          critical: '#ef4444',
+          critical: '#ff6b6b', /* danger */
         },
-        eco: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-          950: '#052e16',
+        obsidian: {
+          bg: '#0e0e10',
+          'surface-low': '#131315',
+          'surface-mid': '#1a1a1c',
+          'surface-high': '#222224',
+          'surface-bright': '#2c2c2e',
+          accent: '#3b82f6',
+          'accent-dim': '#2563eb',
+          primary: '#57f1db', /* Cyan */
+          'on-surface': '#e8e4e7',
+          'on-surface-var': '#a89fa8',
+          outline: '#4a484c',
+          'outline-var': '#2a282c',
         },
       },
     },

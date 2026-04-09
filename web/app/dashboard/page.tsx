@@ -37,10 +37,10 @@ interface UserSettings {
 }
 
 const ALERT_CONFIG: Record<string, { emoji: string; color: string; glow: string; bg: string }> = {
-  LOW: { emoji: '🟢', color: 'text-green-400', glow: 'glow-low', bg: 'bg-green-500/10' },
-  MEDIUM: { emoji: '🟡', color: 'text-yellow-400', glow: 'glow-medium', bg: 'bg-yellow-500/10' },
-  HIGH: { emoji: '🟠', color: 'text-orange-400', glow: 'glow-high', bg: 'bg-orange-500/10' },
-  CRITICAL: { emoji: '🔴', color: 'text-red-400', glow: 'glow-critical', bg: 'bg-red-500/10' },
+  LOW: { emoji: '🟢', color: 'text-risk-low', glow: 'glow-low', bg: 'bg-risk-low/10' },
+  MEDIUM: { emoji: '🟡', color: 'text-risk-medium', glow: 'glow-medium', bg: 'bg-risk-medium/10' },
+  HIGH: { emoji: '🟠', color: 'text-risk-high', glow: 'glow-high', bg: 'bg-risk-high/10' },
+  CRITICAL: { emoji: '🔴', color: 'text-risk-critical', glow: 'glow-critical', bg: 'bg-risk-critical/10' },
 };
 
 export default function DashboardPage() {
@@ -104,21 +104,23 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold gradient-text">{t('dashboard.title')}</h1>
-          <p className="text-slate-400 text-sm">{settings?.location_name ?? 'Manizales, Colombia'}</p>
+          <h1 className="text-3xl font-bold gradient-text tracking-tight">{t('dashboard.title')}</h1>
+          <p className="text-obsidian-on-surface-var text-sm font-body mt-1 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-obsidian-accent animate-pulse" />
+            {settings?.location_name ?? 'Manizales, Colombia'}
+          </p>
         </div>
         <a
           href="/dashboard/settings"
-          className="text-slate-400 hover:text-green-400 transition-colors"
+          className="text-obsidian-on-surface-var hover:text-obsidian-accent transition-all duration-300 font-medium flex items-center gap-2 bg-obsidian-surface-mid px-4 py-2 rounded-lg border border-obsidian-outline-var"
         >
           ⚙️ {t('dashboard.settings')}
         </a>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Section 1 — Current Risk Level */}
         <div className={`glass-card p-8 ${alertStyle.glow}`}>
-          <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
+          <h2 className="text-xs font-bold text-obsidian-on-surface-var uppercase tracking-[0.2em] mb-6">
             {t('dashboard.current_risk')}
           </h2>
           {latestReport ? (
@@ -129,17 +131,17 @@ export default function DashboardPage() {
                   <p className={`text-4xl font-extrabold ${alertStyle.color}`}>
                     {latestReport.alert_level}
                   </p>
-                  <p className="text-slate-400 text-sm mt-1">
-                    {t('dashboard.probability')}: {(latestReport.risk_probability * 100).toFixed(1)}%
+                  <p className="text-obsidian-on-surface-var text-sm mt-1">
+                    {t('dashboard.probability')}: <span className="text-obsidian-on-surface font-mono">{(latestReport.risk_probability * 100).toFixed(1)}%</span>
                   </p>
                 </div>
               </div>
-              <p className="text-slate-500 text-xs">
+              <p className="text-obsidian-on-surface-var/50 text-xs font-mono">
                 {t('dashboard.last_calc')}: {new Date(latestReport.created_at).toLocaleString(language === 'es' ? 'es-CO' : 'en-US')}
               </p>
             </>
           ) : (
-            <p className="text-slate-500">
+            <p className="text-obsidian-on-surface-var">
               {t('dashboard.no_reports')}
             </p>
           )}
@@ -147,7 +149,7 @@ export default function DashboardPage() {
 
         {/* Section 2 — CIR Chart */}
         <div className="glass-card p-6">
-          <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
+          <h2 className="text-xs font-bold text-obsidian-on-surface-var uppercase tracking-[0.2em] mb-6">
             {t('dashboard.evolution')}
           </h2>
           {reports.length > 0 ? (
@@ -164,7 +166,7 @@ export default function DashboardPage() {
 
         {/* Section 3 — Map */}
         <div className="glass-card p-6">
-          <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
+          <h2 className="text-xs font-bold text-obsidian-on-surface-var uppercase tracking-[0.2em] mb-6">
             {t('dashboard.location')}
           </h2>
           <div className="h-64 rounded-xl overflow-hidden">
@@ -178,35 +180,35 @@ export default function DashboardPage() {
 
         {/* Section 4 — Report History */}
         <div className="glass-card p-6">
-          <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
+          <h2 className="text-xs font-bold text-obsidian-on-surface-var uppercase tracking-[0.2em] mb-6">
             {t('dashboard.history')}
           </h2>
           {reports.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-slate-400 border-b border-slate-700/50">
-                    <th className="text-left py-2 px-2">{t('dashboard.date')}</th>
-                    <th className="text-left py-2 px-2">{t('dashboard.level')}</th>
-                    <th className="text-right py-2 px-2">{t('dashboard.probability')}</th>
+                  <tr className="text-obsidian-on-surface-var border-b border-obsidian-outline-var/50 text-[10px] uppercase tracking-widest">
+                    <th className="text-left py-3 px-2">{t('dashboard.date')}</th>
+                    <th className="text-left py-3 px-2">{t('dashboard.level')}</th>
+                    <th className="text-right py-3 px-2">{t('dashboard.probability')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {reports.slice(0, 10).map((r) => {
                     const style = ALERT_CONFIG[r.alert_level] ?? ALERT_CONFIG.LOW;
                     return (
-                      <tr key={r.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
-                        <td className="py-2 px-2 text-slate-400">
+                      <tr key={r.id} className="border-b border-obsidian-outline-var/30 hover:bg-obsidian-accent/5 transition-colors group">
+                        <td className="py-3 px-2 text-obsidian-on-surface-var group-hover:text-obsidian-on-surface transition-colors font-body">
                           {new Date(r.created_at).toLocaleString(language === 'es' ? 'es-CO' : 'en-US', {
                             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                           })}
                         </td>
-                        <td className="py-2 px-2">
-                          <span className={`${style.color} font-medium`}>
+                        <td className="py-3 px-2">
+                          <span className={`${style.color} font-medium flex items-center gap-2`}>
                             {style.emoji} {r.alert_level}
                           </span>
                         </td>
-                        <td className="py-2 px-2 text-right text-slate-300 font-mono">
+                        <td className="py-3 px-2 text-right text-obsidian-on-surface font-mono">
                           {(r.risk_probability * 100).toFixed(1)}%
                         </td>
                       </tr>

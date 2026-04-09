@@ -21,10 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body className="min-h-screen antialiased">
+    <html lang="es" className="dark">
+      <body className="min-h-screen antialiased bg-obsidian-bg text-obsidian-on-surface">
+        <div className="grid-bg" />
+        <div className="glow-tr" />
         <LanguageProvider>
-          {children}
+          <div className="relative z-10">
+            {children}
+          </div>
         </LanguageProvider>
       </body>
     </html>

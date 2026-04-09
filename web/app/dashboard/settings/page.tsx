@@ -79,7 +79,7 @@ export default function SettingsPage() {
   if (loading || !settings) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-400 animate-pulse">{t('common.loading')}</div>
+        <div className="text-obsidian-on-surface-var animate-pulse font-body">{t('common.loading')}</div>
       </div>
     );
   }
@@ -89,17 +89,17 @@ export default function SettingsPage() {
       <div className="flex items-center gap-4 mb-8">
         <button
           onClick={() => router.push('/dashboard')}
-          className="text-slate-400 hover:text-green-400 transition-colors"
+          className="text-obsidian-on-surface-var hover:text-obsidian-accent transition-colors font-medium flex items-center gap-2"
         >
-          {t('settings.back')}
+          ← {t('settings.back')}
         </button>
-        <h1 className="text-2xl font-bold gradient-text">{t('settings.title')}</h1>
+        <h1 className="text-3xl font-bold gradient-text pb-1">{t('settings.title')}</h1>
       </div>
 
       <div className="glass-card p-8 space-y-6">
         {/* Alert Threshold */}
         <div>
-          <label htmlFor="threshold" className="block text-sm font-medium text-slate-300 mb-2">
+          <label htmlFor="threshold" className="block text-sm font-bold text-obsidian-on-surface-var uppercase tracking-wider mb-3">
             {t('settings.threshold_label')}
           </label>
           <select
@@ -113,7 +113,7 @@ export default function SettingsPage() {
             <option value="HIGH">🟠 HIGH</option>
             <option value="CRITICAL">🔴 CRITICAL</option>
           </select>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-obsidian-on-surface-var/60 mt-2 font-body">
             {t('settings.threshold_desc')}
           </p>
         </div>
@@ -121,13 +121,13 @@ export default function SettingsPage() {
         {/* Voice */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-slate-300">{t('settings.voice_label')}</p>
-            <p className="text-xs text-slate-500">{t('settings.voice_desc')}</p>
+            <p className="text-sm font-bold text-obsidian-on-surface-var uppercase tracking-wider">{t('settings.voice_label')}</p>
+            <p className="text-xs text-obsidian-on-surface-var/60 mt-1 font-body">{t('settings.voice_desc')}</p>
           </div>
           <button
             onClick={() => setSettings({ ...settings, voice_enabled: !settings.voice_enabled })}
-            className={`w-12 h-6 rounded-full transition-colors relative ${
-              settings.voice_enabled ? 'bg-green-500' : 'bg-slate-700'
+            className={`w-12 h-6 rounded-full transition-all relative ${
+              settings.voice_enabled ? 'bg-obsidian-accent' : 'bg-obsidian-surface-bright'
             }`}
           >
             <span
@@ -140,7 +140,7 @@ export default function SettingsPage() {
 
         {/* Report Frequency */}
         <div>
-          <label htmlFor="frequency" className="block text-sm font-medium text-slate-300 mb-2">
+          <label htmlFor="frequency" className="block text-sm font-bold text-obsidian-on-surface-var uppercase tracking-wider mb-3">
             Frecuencia de reportes automáticos
           </label>
           <select
@@ -161,7 +161,7 @@ export default function SettingsPage() {
 
         {/* Language */}
         <div>
-          <label htmlFor="language" className="block text-sm font-medium text-slate-300 mb-2">
+          <label htmlFor="language" className="block text-sm font-bold text-obsidian-on-surface-var uppercase tracking-wider mb-3">
             {t('settings.language_label')}
           </label>
           <select
@@ -173,18 +173,17 @@ export default function SettingsPage() {
             <option value="es">🇪🇸 Español</option>
             <option value="en">🇺🇸 English</option>
           </select>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-obsidian-on-surface-var/60 mt-2 font-body">
             {t('settings.language_desc')}
           </p>
         </div>
 
-        {/* Save */}
-        <div className="pt-4 border-t border-slate-700/50">
-          <button onClick={handleSave} disabled={saving} className="btn-primary w-full">
+        <div className="pt-6 border-t border-obsidian-outline-var/50">
+          <button onClick={handleSave} disabled={saving} className="btn-primary w-full py-4 text-base tracking-wide">
             {saving ? t('common.saving') : saved ? `✓ ${t('settings.success')}` : t('common.save')}
           </button>
           {saved && (
-            <p className="text-green-400 text-sm text-center mt-2">
+            <p className="text-risk-low text-sm text-center mt-3 font-medium animate-bounce">
               {t('settings.success')}
             </p>
           )}

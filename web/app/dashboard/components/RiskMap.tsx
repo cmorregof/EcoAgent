@@ -11,10 +11,10 @@ import { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 
 const MARKER_COLORS: Record<string, string> = {
-  LOW: '#22c55e',
-  MEDIUM: '#eab308',
+  LOW: '#4ade80',    /* success */
+  MEDIUM: '#f5c347', /* warn */
   HIGH: '#f97316',
-  CRITICAL: '#ef4444',
+  CRITICAL: '#ff6b6b', /* danger */
 };
 
 export default function RiskMap({

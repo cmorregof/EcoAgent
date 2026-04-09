@@ -54,27 +54,34 @@ export default function RiskChart({
   return (
     <ResponsiveContainer width="100%" height={250}>
       <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+        <CartesianGrid strokeDasharray="3 3" stroke="#2a282c" vertical={false} />
         <XAxis
           dataKey="time"
-          stroke="#475569"
-          fontSize={12}
-          tick={{ fill: '#64748b' }}
+          stroke="#4a484c"
+          fontSize={10}
+          tick={{ fill: '#a89fa8' }}
+          axisLine={false}
+          tickLine={false}
         />
         <YAxis
           domain={[0, 1]}
-          stroke="#475569"
-          fontSize={12}
-          tick={{ fill: '#64748b' }}
+          stroke="#4a484c"
+          fontSize={10}
+          tick={{ fill: '#a89fa8' }}
           tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
+          axisLine={false}
+          tickLine={false}
         />
         <Tooltip
           contentStyle={{
-            background: '#0f172a',
-            border: '1px solid #334155',
-            borderRadius: '8px',
-            color: '#e2e8f0',
+            background: '#131315',
+            border: '1px solid #4a484c',
+            borderRadius: '12px',
+            color: '#e8e4e7',
+            fontSize: '12px',
+            fontFamily: 'Inter, sans-serif'
           }}
+          itemStyle={{ color: '#57f1db' }}
           formatter={(value: number) => [`${(value * 100).toFixed(1)}%`, 'Probabilidad']}
         />
         <ReferenceLine
@@ -90,10 +97,10 @@ export default function RiskChart({
         <Line
           type="monotone"
           dataKey="probability"
-          stroke="#22c55e"
-          strokeWidth={2}
-          dot={{ fill: '#22c55e', r: 3 }}
-          activeDot={{ r: 5, fill: '#22c55e' }}
+          stroke="#3b82f6"
+          strokeWidth={3}
+          dot={{ fill: '#3b82f6', r: 4, strokeWidth: 2, stroke: '#0e0e10' }}
+          activeDot={{ r: 6, fill: '#57f1db', stroke: '#0e0e10', strokeWidth: 2 }}
         />
       </LineChart>
     </ResponsiveContainer>
