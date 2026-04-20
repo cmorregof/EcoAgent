@@ -62,7 +62,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full"
-              placeholder="carlos@ejemplo.com"
+              placeholder="operator@system.sys"
             />
           </div>
 
@@ -82,7 +82,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm bg-red-950/30 p-3 rounded-lg">
+            <div className="text-red-400 text-sm bg-red-950/30 p-3 rounded">
               {error}
             </div>
           )}
@@ -94,7 +94,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-slate-400 mt-6">
           {t('auth.no_account')}{' '}
-          <Link href="/register" className="text-green-400 hover:text-green-300 transition-colors">
+          <Link href="/register" className="text-blue-400 hover:text-blue-300 transition-colors">
             {t('auth.signup')}
           </Link>
         </p>

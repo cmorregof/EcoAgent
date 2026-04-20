@@ -30,31 +30,28 @@ export default function LandingPage() {
         <div className="hero-content">
           <div className="hero-eyebrow">
             <div className="status-dot"></div>
-            <span className="mono text-obsidian-outline-var" style={{ color: 'var(--clr-outline)' }}>ECOAGENT ENGINE CORE · ONLINE</span>
+            <span className="mono text-obsidian-outline-var" style={{ color: 'var(--clr-outline)' }}>ECOAGENT OPERATIONAL STATUS // ACTIVE</span>
           </div>
 
           <div className="wordmark-lockup">
-            <div className="globe-art" style={{ filter: 'drop-shadow(0 0 12px rgba(59,130,246,0.3))' }}>
-              🌧️
-            </div>
             <div className="wordmark-text">
               <span className="wordmark-the">THE VELVETEEN PROJECT</span>
               <span className="wordmark-name">Eco<span className="accent">Agent</span></span>
-              <span className="wordmark-project">CLIMATE RISK DETECTOR</span>
+              <span className="wordmark-project">STOCHASTIC CLIMATE RISK MONITOR</span>
             </div>
           </div>
 
           <p className="hero-description mt-2">
-            Plataforma avanzada de monitoreo y análisis estocástico para la gestión del riesgo climático.<br/>
-            Monitoreo en tiempo real de deslizamientos con precisión científica.
+            Advanced monitoring and stochastic analysis platform for climate risk management.<br/>
+            Real-time landslide detection with scientific precision.
           </p>
 
           <div className="hero-ctas mt-2">
             <Link href="/register" className="btn-landing">
-              Comenzar Análisis
+              Initiate Analysis
             </Link>
             <Link href="/login" className="btn-landing-ghost">
-              Portal de Acceso
+              Access Portal
             </Link>
           </div>
 
@@ -85,38 +82,38 @@ export default function LandingPage() {
                 <div className="dot dot-yellow"></div>
                 <div className="dot dot-green"></div>
               </div>
-              <div className="terminal-title">eco_agent_daemon.py</div>
+              <div className="terminal-title">eco_agent_monitor.sys</div>
             </div>
             <div className="terminal-body">
               <div className="terminal-line">
                 <span className="term-prompt">❯</span>
-                <span className="term-cmd">python3 main.py --env production --daemon</span>
+                <span className="term-cmd">systemctl start ecoagent.service</span>
               </div>
               
               <div className="term-output">
                 {terminalLines >= 1 && (
                   <div className={`term-out-line ${terminalLines >= 1 ? 'visible' : ''}`}>
-                    <span className="muted">[INFO]</span> Inicializando base de datos Supabase... OK.
+                    <span className="muted">[INFO]</span> Initializing Supabase telemetry... OK.
                   </div>
                 )}
                 {terminalLines >= 2 && (
                   <div className={`term-out-line ${terminalLines >= 2 ? 'visible' : ''}`}>
-                    <span className="muted">[INFO]</span> Conectando con API de Open-Meteo... <span className="success">CONECTADO</span>
+                    <span className="muted">[INFO]</span> Synchronizing with Open-Meteo API... <span className="success">SYNCED</span>
                   </div>
                 )}
                 {terminalLines >= 3 && (
                   <div className={`term-out-line ${terminalLines >= 3 ? 'visible' : ''}`}>
-                    <span className="muted">[INFO]</span> Cargando modelo CIR-Jump-Diffusion (LandslideRisk)... OK.
+                    <span className="muted">[INFO]</span> Loading CIR-Jump-Diffusion (LandslideRisk) model... OK.
                   </div>
                 )}
                 {terminalLines >= 4 && (
                   <div className={`term-out-line highlight ${terminalLines >= 4 ? 'visible' : ''}`}>
-                    <span className="muted">[WARN]</span> Precipitación anómala detectada en Estación Manizales (25.4mm)
+                    <span className="muted">[WARN]</span> Anomalous precipitation detected: Manizales Station (25.4mm)
                   </div>
                 )}
                 {terminalLines >= 5 && (
                   <div className={`term-out-line success mt-2 ${terminalLines >= 5 ? 'visible' : ''}`}>
-                    <span className="success">✔</span> Alerta Temprana disparada al canal de Telegram.
+                    <span className="success">✔</span> Early Warning dispatched to Telegram gateway.
                   </div>
                 )}
               </div>

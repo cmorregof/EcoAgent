@@ -73,13 +73,13 @@ export default function RegisterPage() {
       <div className="glass-card p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold gradient-text mb-2">EcoAgent</h1>
-          <p className="text-slate-400">Crea tu cuenta para monitorear riesgo climático</p>
+          <p className="text-slate-400">Register for climate risk monitoring</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-slate-300 mb-1">
-              Nombre completo
+              Full Name
             </label>
             <input
               id="fullName"
@@ -88,7 +88,7 @@ export default function RegisterPage() {
               onChange={(e) => setFullName(e.target.value)}
               required
               className="w-full"
-              placeholder="Carlos Orrego"
+              placeholder="System Operator"
             />
           </div>
 
@@ -103,13 +103,13 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full"
-              placeholder="carlos@ejemplo.com"
+              placeholder="operator@system.sys"
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1">
-              Contraseña
+              Password
             </label>
             <input
               id="password"
@@ -123,22 +123,22 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div className="flex items-start gap-3 bg-slate-800/50 p-4 rounded-xl">
+          <div className="flex items-start gap-3 bg-slate-800/50 p-4 rounded">
             <input
               id="consent"
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="mt-1 w-4 h-4 rounded accent-green-500"
+              className="mt-1 w-4 h-4 rounded accent-blue-500"
             />
             <label htmlFor="consent" className="text-sm text-slate-300 leading-relaxed">
-              Acepto que EcoAgent procese mis datos climáticos para generar alertas
-              de riesgo personalizadas.
+              I consent to EcoAgent processing my climate data to generate 
+              personalized risk alerts.
             </label>
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm bg-red-950/30 p-3 rounded-lg">
+            <div className="text-red-400 text-sm bg-red-950/30 p-3 rounded">
               {error}
             </div>
           )}
@@ -148,14 +148,14 @@ export default function RegisterPage() {
             disabled={loading || !consent}
             className="btn-primary w-full"
           >
-            {loading ? 'Creando cuenta...' : 'Crear cuenta'}
+            {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
         <p className="text-center text-sm text-slate-400 mt-6">
-          ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-green-400 hover:text-green-300 transition-colors">
-            Inicia sesión
+          Already have an account?{' '}
+          <Link href="/login" className="text-blue-400 hover:text-blue-300 transition-colors">
+            Log in
           </Link>
         </p>
       </div>

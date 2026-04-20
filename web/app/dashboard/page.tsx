@@ -144,7 +144,7 @@ export default function DashboardPage() {
         <div className="panel reveal">
           <div className="panel-header">
             <div className="panel-title">EVOLUCIÓN DEL RIESGO</div>
-            <div className="panel-tag">RECHARTS</div>
+            <div className="panel-tag">TIME SERIES</div>
           </div>
           <div className="panel-body">
             {reports.length > 0 ? (
@@ -160,7 +160,7 @@ export default function DashboardPage() {
         <div className="panel reveal">
           <div className="panel-header">
             <div className="panel-title">MAPA DE RIESGO GEOSESPACIAL</div>
-            <div className="panel-tag">LEAFLET ONLINE</div>
+            <div className="panel-tag">SPATIAL RISK MAP</div>
           </div>
           <div className="panel-body p-0 h-[280px]">
             <RiskMap
@@ -175,7 +175,7 @@ export default function DashboardPage() {
       <div className="panel reveal mt-8">
         <div className="panel-header">
           <div className="panel-title">HISTORIAL DE SIMULACIONES</div>
-          <div className="panel-tag">SUPABASE LOGS</div>
+          <div className="panel-tag">SYSTEM LOGS</div>
         </div>
         <div className="panel-body p-0">
           <table className="history-table">
