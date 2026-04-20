@@ -11,6 +11,13 @@ and multimodal alerts.*
 
 ---
 
+## 🐇 Velveteen Family Coherence
+EcoAgent is an operational product of **The Velveteen Project**. While it maintains its own specific identity as an applied climate monitoring system, it adheres to the family's core values: technical rigor, premium restraint, and an anti-hype posture.
+
+For details on the current design alignment and planned refinements, see the [EcoAgent Brand Coherence & Pruning Audit](docs/ecoagent-pruning-audit.md).
+
+---
+
 ## 🎯 The Problem
 
 Mountainous regions like **Manizales, Colombia** face constant 
