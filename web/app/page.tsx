@@ -1,19 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function LandingPage() {
   const { language, setLanguage, t } = useLanguage();
-  const [activeStep, setActiveStep] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % 4);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <div className="landing-wrapper relative overflow-hidden">
@@ -113,45 +104,35 @@ export default function LandingPage() {
 
             <div className="artifact-scene">
               <div className="terrain-panel">
+                <div className="terrain-atmosphere"></div>
+
                 <div className="scene-rain">
-                  {Array.from({ length: 14 }).map((_, idx) => (
+                  {Array.from({ length: 12 }).map((_, idx) => (
                     <span
                       key={`rain-${idx}`}
                       className={`rain-streak ${idx % 4 === 0 ? 'heavy' : ''}`}
-                      style={{ left: `${6 + idx * 6.4}%`, animationDelay: `${idx * 0.22}s` }}
+                      style={{ left: `${8 + idx * 7.1}%`, animationDelay: `${idx * 0.24}s` }}
                     />
                   ))}
                 </div>
 
-                <div className="terrain-haze"></div>
-                <div className="terrain-contours">
-                  <span className="contour-line contour-1"></span>
-                  <span className="contour-line contour-2"></span>
-                  <span className="contour-line contour-3"></span>
-                </div>
-
-                <div className="slope-mass slope-mass-back"></div>
-                <div className="slope-mass slope-mass-front">
-                  <div className="slope-monitor-band">
-                    <span>{t('landing.sector_primary')}</span>
-                    <strong>{t('landing.sector_status')}</strong>
-                  </div>
-                  <div className="risk-scar risk-scar-secondary"></div>
-                  <div className="risk-scar risk-scar-major"></div>
-                  <div className="runoff-trace runoff-trace-main"></div>
-                  <div className="runoff-trace runoff-trace-secondary"></div>
-                </div>
+                <div className="ridge ridge-back"></div>
+                <div className="ridge ridge-mid"></div>
+                <div className="ridge ridge-front"></div>
+                <div className="slope-monitor-line"></div>
+                <div className="risk-trace risk-trace-primary"></div>
+                <div className="risk-trace risk-trace-secondary"></div>
 
                 <div className="rain-readout">
                   <span>{t('landing.rain_label')}</span>
                   <strong>{t('landing.rain_value')}</strong>
                 </div>
 
-                <div className="risk-zone risk-zone-watch">
-                  <div className="risk-zone-pulse"></div>
-                  <span>{t('landing.zone_watch')}</span>
+                <div className="risk-focus">
+                  <div className="risk-focus-ring"></div>
+                  <div className="risk-focus-core"></div>
                 </div>
-                <div className="risk-zone risk-zone-warning">
+                <div className="risk-zone">
                   <div className="risk-zone-pulse"></div>
                   <span>{t('landing.zone_warning')}</span>
                 </div>
@@ -172,28 +153,9 @@ export default function LandingPage() {
                 </div>
 
                 <div className="alert-banner">
-                  <span className="alert-banner-label">{t('landing.workflow_risk')}</span>
+                  <span className="alert-banner-label">{t('landing.visual_status')}</span>
                   <strong>{t('landing.alert_banner')}</strong>
                 </div>
-              </div>
-            </div>
-
-            <div className="signal-strip">
-              <div className={`signal-item ${activeStep >= 0 ? 'active' : ''}`}>
-                <span className="signal-index">01</span>
-                <span className="signal-label">{t('landing.workflow_meteo')}</span>
-              </div>
-              <div className={`signal-item ${activeStep >= 1 ? 'active' : ''}`}>
-                <span className="signal-index">02</span>
-                <span className="signal-label">{t('landing.workflow_soil')}</span>
-              </div>
-              <div className={`signal-item ${activeStep >= 2 ? 'active' : ''}`}>
-                <span className="signal-index">03</span>
-                <span className="signal-label">{t('landing.workflow_model')}</span>
-              </div>
-              <div className={`signal-item ${activeStep >= 3 ? 'active' : ''}`}>
-                <span className="signal-index">04</span>
-                <span className="signal-label">{t('landing.workflow_risk')}</span>
               </div>
             </div>
 
