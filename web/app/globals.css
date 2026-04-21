@@ -843,7 +843,7 @@ input:focus, select:focus {
   right: -9%;
   bottom: 48%;
   height: 32%;
-  background: linear-gradient(180deg, rgba(152, 98, 54, 0.78) 0%, rgba(86, 54, 32, 0.96) 100%);
+  background: linear-gradient(180deg, rgba(132, 88, 52, 0.76) 0%, rgba(72, 46, 28, 0.97) 100%);
   clip-path: polygon(
     0 86%,
     8% 78%,
@@ -871,7 +871,7 @@ input:focus, select:focus {
   right: -4%;
   bottom: 26%;
   height: 40%;
-  background: linear-gradient(180deg, rgba(198, 176, 150, 0.92) 0%, rgba(118, 96, 79, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(186, 168, 146, 0.9) 0%, rgba(108, 89, 74, 0.98) 100%);
   clip-path: polygon(
     0 92%,
     10% 86%,
@@ -903,25 +903,38 @@ input:focus, select:focus {
     linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 18%),
     linear-gradient(180deg, rgba(46, 50, 57, 0.98) 0%, rgba(24, 26, 31, 1) 100%);
   clip-path: polygon(
-    0 98%,
-    7% 92%,
-    14% 86%,
-    22% 80%,
-    30% 72%,
-    38% 66%,
-    46% 58%,
-    54% 50%,
-    60% 44%,
-    66% 48%,
-    72% 38%,
-    78% 30%,
-    84% 22%,
-    90% 14%,
-    96% 8%,
-    100% 2%,
+    0 100%,
+    0 90%,
+    6% 84%,
+    14% 78%,
+    22% 70%,
+    30% 62%,
+    38% 52%,
+    46% 44%,
+    54% 36%,
+    62% 40%,
+    70% 30%,
+    78% 22%,
+    84% 14%,
+    90% 10%,
+    96% 6%,
+    100% 0%,
     100% 100%,
     0 100%
   );
+}
+
+.ridge-front::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+  background:
+    radial-gradient(circle at 76% 46%, rgba(232, 220, 204, 0.22) 0%, rgba(232, 220, 204, 0.0) 55%),
+    radial-gradient(circle at 70% 54%, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.0) 64%);
+  /* A subtle scar-like shape near the monitored zone, without becoming a callout. */
+  clip-path: polygon(58% 60%, 74% 44%, 92% 50%, 82% 76%, 64% 74%);
+  pointer-events: none;
 }
 
 .slope-monitor-line {
@@ -968,24 +981,17 @@ input:focus, select:focus {
   50% { transform: scale(1.08); opacity: 0.45; }
 }
 
-.urban-edge {
+.terrain-panel::after {
+  content: '';
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  display: flex;
-  align-items: flex-end;
-  gap: 0.28rem;
-  padding: 0 0.8rem 0.8rem;
-  height: 18%;
-  background: linear-gradient(180deg, rgba(12,12,14,0) 0%, rgba(12,12,14,0.78) 58%, rgba(12,12,14,1) 100%);
-}
-
-.urban-block {
-  display: block;
-  background: linear-gradient(180deg, rgba(72,77,83,0.86) 0%, rgba(31,33,38,0.98) 100%);
-  border-top: 1px solid rgba(255,255,255,0.06);
-  opacity: 0.82;
+  height: 22%;
+  background:
+    linear-gradient(180deg, rgba(12,12,14,0) 0%, rgba(12,12,14,0.86) 58%, rgba(12,12,14,1) 100%),
+    radial-gradient(circle at 18% 84%, rgba(255,255,255,0.06), rgba(255,255,255,0) 55%);
+  pointer-events: none;
 }
 
 .artifact-summary {

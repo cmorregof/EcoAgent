@@ -126,18 +126,6 @@ export default function LandingPage() {
                   <div className="risk-focus-core"></div>
                 </div>
 
-                <div className="urban-edge">
-                  {Array.from({ length: 9 }).map((_, idx) => (
-                    <span
-                      key={`urban-${idx}`}
-                      className="urban-block"
-                      style={{
-                        height: `${12 + (idx % 4) * 6}px`,
-                        width: `${12 + (idx % 3) * 5}px`,
-                      }}
-                    />
-                  ))}
-                </div>
               </div>
             </div>
 
