@@ -105,10 +105,13 @@ export default function LandingPage() {
             <div className="spatial-grid">
               {/* Stylized terrain contours */}
               <svg className="terrain-contour" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 150C100 120 200 180 400 130" stroke="currentColor" strokeWidth="0.5" />
-                <path d="M0 120C120 90 250 140 400 100" stroke="currentColor" strokeWidth="0.5" />
-                <path d="M0 90C150 60 280 110 400 70" stroke="currentColor" strokeWidth="0.5" />
-                <path d="M0 60C180 30 320 80 400 40" stroke="currentColor" strokeWidth="0.5" />
+                {/* Steeper, more irregular peaks for Andean context */}
+                <path d="M0 190L60 140L130 160L190 100L260 135L330 80L400 120" stroke="currentColor" strokeWidth="0.5" />
+                <path d="M0 160L80 110L150 130L210 70L290 105L350 50L400 90" stroke="currentColor" strokeWidth="0.5" />
+                <path d="M0 130L100 80L170 100L230 40L320 75L370 20L400 60" stroke="currentColor" strokeWidth="0.5" />
+                
+                {/* Monitored Sector Highlight */}
+                <path d="M130 160L190 100L260 135Z" fill="var(--accent)" fillOpacity="0.08" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="3 2" />
               </svg>
               
               {/* Risk Nodes */}

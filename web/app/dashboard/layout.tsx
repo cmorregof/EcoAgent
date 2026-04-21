@@ -91,7 +91,7 @@ export default function DashboardLayout({
           <div className="topbar-title">RISK MONITORING SYSTEM</div>
           <div className="topbar-sep"></div>
           <div className="topbar-path">
-            ecoagent.velveteen.app{pathname === '/dashboard' ? '/dashboard' : pathname}
+            {t('topbar.region_prefix')} · {t('topbar.region_name')}
           </div>
           
           <div className="topbar-right">

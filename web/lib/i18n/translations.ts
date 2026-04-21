@@ -11,6 +11,10 @@ export const translations = {
       logout: 'Cerrar sesión',
       not_your_account: '¿No es tu cuenta?',
     },
+    topbar: {
+      region_prefix: 'ZONA DE MONITOREO',
+      region_name: 'MANIZALES',
+    },
     auth: {
       signup: 'Regístrate aquí',
       register_title: 'Registro EcoAgent',
@@ -102,7 +106,7 @@ export const translations = {
       parent_brand: 'THE VELVETEEN PROJECT',
       product_name: 'EcoAgent',
       product_accent: 'Agent',
-      descriptor: 'MONITOREO ESTOCÁSTICO DE RIESGO CLIMÁTICO',
+      descriptor: 'MONITOREO PREDICTIVO DE RIESGO DE DESLIZAMIENTOS',
       description: 'Plataforma avanzada de monitoreo y análisis estocástico para la gestión del riesgo climático. Combinando señales meteorológicas en tiempo real con modelado de saturación de suelo para decisiones operativas críticas.',
       cta_primary: 'Iniciar Análisis',
       cta_secondary: 'Portal de Acceso',
@@ -127,6 +131,10 @@ export const translations = {
       cancel: 'Cancel',
       logout: 'Logout',
       not_your_account: 'Not your account?',
+    },
+    topbar: {
+      region_prefix: 'MONITORING REGION',
+      region_name: 'MANIZALES',
     },
     auth: {
       signup: 'Sign up here',
@@ -219,7 +227,7 @@ export const translations = {
       parent_brand: 'THE VELVETEEN PROJECT',
       product_name: 'EcoAgent',
       product_accent: 'Agent',
-      descriptor: 'STOCHASTIC CLIMATE RISK MONITOR',
+      descriptor: 'PREDICTIVE LANDSLIDE RISK MONITORING',
       description: 'Advanced monitoring and stochastic analysis platform for climate risk management. Combining real-time meteorological signals with soil saturation modeling for critical operational decisions.',
       cta_primary: 'Initiate Analysis',
       cta_secondary: 'Access Portal',
