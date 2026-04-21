@@ -164,7 +164,11 @@ export default function SettingsPage() {
             <select
               id="language"
               value={settings.language}
-              onChange={(e) => setSettings({ ...settings, language: e.target.value })}
+              onChange={(e) => {
+                const newLang = e.target.value as Language;
+                setSettings({ ...settings, language: newLang });
+                setLanguage(newLang);
+              }}
               className="w-full bg-obsidian-surface-mid border-obsidian-outline-var text-obsidian-on-surface"
             >
               <option value="es">🇪🇸 Español</option>

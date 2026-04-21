@@ -1,11 +1,3 @@
-// ---
-// 📚 POR QUÉ: Página de registro con consentimiento de datos obligatorio.
-//    GDPR y regulaciones colombianas exigen consentimiento explícito antes de procesar
-//    datos personales. Sin el checkbox de consentimiento con fecha, el proyecto no
-//    podría operar legalmente como SaaS.
-// 📁 ARCHIVO: web/app/(auth)/register/page.tsx
-// ---
-
 'use client';
 
 import { useState } from 'react';
@@ -22,12 +14,12 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!consent) {
-      setError(t('auth.consent_text')); // Using consent text as error too for simplicity or add a specific one
+      setError(t('auth.consent_text'));
       return;
     }
 
@@ -59,9 +51,10 @@ export default function RegisterPage() {
         consent_date: new Date().toISOString(),
       });
 
-      // Create default settings
+      // Create default settings including current language
       await supabase.from('user_settings').insert({
         user_id: data.user.id,
+        language: language,
       });
 
       router.push('/onboarding');
@@ -161,7 +154,5 @@ export default function RegisterPage() {
         </p>
       </div>
     </div>
-  );
-}
   );
 }
