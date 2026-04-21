@@ -83,13 +83,13 @@ export default function SettingsPage() {
   return (
     <>
       <div className="section-header reveal">
-        <div className="section-tag">AJUSTES DEL SISTEMA</div>
+        <div className="section-tag">{t('settings.system_header')}</div>
         <div className="section-line"></div>
       </div>
 
       <div className="panel reveal max-w-2xl">
         <div className="panel-header">
-          <div className="panel-title">PREFERENCIAS DEL USUARIO</div>
+          <div className="panel-title">{t('settings.user_preferences')}</div>
           <div className="panel-tag">USER_SETTINGS_TABLE</div>
         </div>
         
@@ -97,7 +97,7 @@ export default function SettingsPage() {
           {/* Alert Threshold */}
           <div>
             <label htmlFor="threshold" className="block text-xs font-mono text-obsidian-on-surface-var mb-2">
-              [ UMBRAL DE ALERTA TELEGRAM ]
+              {t('settings.threshold_label_telegram')}
             </label>
             <select
               id="threshold"
@@ -105,21 +105,21 @@ export default function SettingsPage() {
               onChange={(e) => setSettings({ ...settings, alert_threshold: e.target.value })}
               className="w-full bg-obsidian-surface-mid border-obsidian-outline-var text-obsidian-on-surface"
             >
-              <option value="LOW">🟢 LOW</option>
-              <option value="MEDIUM">🟡 MEDIUM</option>
-              <option value="HIGH">🟠 HIGH</option>
-              <option value="CRITICAL">🔴 CRITICAL</option>
+              <option value="LOW">🟢 {t('dashboard.low').toUpperCase()}</option>
+              <option value="MEDIUM">🟡 {t('dashboard.medium').toUpperCase()}</option>
+              <option value="HIGH">🟠 {t('dashboard.high').toUpperCase()}</option>
+              <option value="CRITICAL">🔴 {t('dashboard.critical').toUpperCase()}</option>
             </select>
             <p className="text-xs text-obsidian-on-surface-var/60 mt-2 font-mono">
-              Notificar solo cuando el nivel de alerta sea igual o superior a este umbral.
+              {t('settings.threshold_desc')}
             </p>
           </div>
 
           {/* Voice */}
           <div className="flex items-center justify-between border-t border-obsidian-outline-var pt-6">
             <div>
-              <p className="text-xs font-mono text-obsidian-on-surface-var mb-1">[ RESPUESTAS DE VOZ ]</p>
-              <p className="text-xs text-obsidian-on-surface-var/60 font-mono">Permitir al bot responder con audios IA.</p>
+              <p className="text-xs font-mono text-obsidian-on-surface-var mb-1">{t('settings.voice_header')}</p>
+              <p className="text-xs text-obsidian-on-surface-var/60 font-mono">{t('settings.voice_desc_short')}</p>
             </div>
             <button
               onClick={() => setSettings({ ...settings, voice_enabled: !settings.voice_enabled })}
@@ -138,7 +138,7 @@ export default function SettingsPage() {
           {/* Report Frequency */}
           <div className="border-t border-obsidian-outline-var pt-6">
             <label htmlFor="frequency" className="block text-xs font-mono text-obsidian-on-surface-var mb-2">
-              [ FRECUENCIA DE REPORTES AUTOMÁTICOS ]
+              {t('settings.frequency_label')}
             </label>
             <select
               id="frequency"
@@ -148,18 +148,18 @@ export default function SettingsPage() {
               }
               className="w-full bg-obsidian-surface-mid border-obsidian-outline-var text-obsidian-on-surface"
             >
-              <option value={1}>Cada 1 hora</option>
-              <option value={3}>Cada 3 horas</option>
-              <option value={6}>Cada 6 horas</option>
-              <option value={12}>Cada 12 horas</option>
-              <option value={24}>Cada 24 horas</option>
+              <option value={1}>{t('settings.freq_1h')}</option>
+              <option value={3}>{t('settings.freq_3h')}</option>
+              <option value={6}>{t('settings.freq_6h')}</option>
+              <option value={12}>{t('settings.freq_12h')}</option>
+              <option value={24}>{t('settings.freq_24h')}</option>
             </select>
           </div>
 
           {/* Language */}
           <div className="border-t border-obsidian-outline-var pt-6">
             <label htmlFor="language" className="block text-xs font-mono text-obsidian-on-surface-var mb-2">
-              [ IDIOMA DE INTERFAZ ]
+              [ {t('settings.language_label').toUpperCase()} ]
             </label>
             <select
               id="language"
@@ -174,7 +174,7 @@ export default function SettingsPage() {
 
           <div className="pt-8 mt-2">
             <button onClick={handleSave} disabled={saving} className="btn-primary w-full py-3 text-sm tracking-widest uppercase">
-              {saving ? 'Guardando...' : saved ? '✓ GUARDADO CON ÉXITO' : 'Aplicar Cambios'}
+              {saving ? t('common.saving') : saved ? t('settings.save_success') : t('settings.applying_changes')}
             </button>
           </div>
         </div>

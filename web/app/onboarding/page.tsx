@@ -29,7 +29,7 @@ export default function OnboardingPage() {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      setError('No estás autenticado.');
+      setError(t('onboarding.not_authenticated'));
       setLoading(false);
       return;
     }
@@ -39,7 +39,7 @@ export default function OnboardingPage() {
     const telegramChatId = code.trim();
 
     if (!telegramChatId || telegramChatId.length < 4) {
-      setError('Código inválido. Debe tener al menos 4 caracteres.');
+      setError(t('onboarding.invalid_code'));
       setLoading(false);
       return;
     }

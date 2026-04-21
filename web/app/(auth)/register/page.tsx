@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -21,11 +22,12 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!consent) {
-      setError('Debes aceptar el consentimiento de datos para continuar.');
+      setError(t('auth.consent_text')); // Using consent text as error too for simplicity or add a specific one
       return;
     }
 
@@ -73,13 +75,13 @@ export default function RegisterPage() {
       <div className="glass-card p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold gradient-text mb-2">EcoAgent</h1>
-          <p className="text-slate-400">Register for climate risk monitoring</p>
+          <p className="text-slate-400">{t('auth.register_subtitle')}</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-slate-300 mb-1">
-              Full Name
+              {t('auth.full_name')}
             </label>
             <input
               id="fullName"
@@ -94,7 +96,7 @@ export default function RegisterPage() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">
-              Email
+              {t('auth.email')}
             </label>
             <input
               id="email"
@@ -109,7 +111,7 @@ export default function RegisterPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1">
-              Password
+              {t('auth.password')}
             </label>
             <input
               id="password"
@@ -132,8 +134,7 @@ export default function RegisterPage() {
               className="mt-1 w-4 h-4 rounded accent-blue-500"
             />
             <label htmlFor="consent" className="text-sm text-slate-300 leading-relaxed">
-              I consent to EcoAgent processing my climate data to generate 
-              personalized risk alerts.
+              {t('auth.consent_text')}
             </label>
           </div>
 
@@ -148,17 +149,19 @@ export default function RegisterPage() {
             disabled={loading || !consent}
             className="btn-primary w-full"
           >
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? t('auth.creating_account') : t('auth.create_account')}
           </button>
         </form>
 
         <p className="text-center text-sm text-slate-400 mt-6">
-          Already have an account?{' '}
+          {t('auth.already_account')}{' '}
           <Link href="/login" className="text-blue-400 hover:text-blue-300 transition-colors">
-            Log in
+            {t('auth.login_here')}
           </Link>
         </p>
       </div>
     </div>
+  );
+}
   );
 }
