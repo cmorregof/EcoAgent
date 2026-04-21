@@ -120,27 +120,14 @@ export default function LandingPage() {
                 <div className="ridge ridge-mid"></div>
                 <div className="ridge ridge-front"></div>
                 <div className="slope-monitor-line"></div>
-                <div className="risk-trace risk-trace-primary"></div>
-                <div className="risk-trace risk-trace-secondary"></div>
-
-                <div className="rain-readout">
-                  <span>{t('landing.rain_label')}</span>
-                  <strong>{t('landing.rain_value')}</strong>
-                </div>
 
                 <div className="risk-focus">
                   <div className="risk-focus-ring"></div>
                   <div className="risk-focus-core"></div>
                 </div>
-                <div className="risk-zone">
-                  <div className="risk-zone-pulse"></div>
-                  <span>{t('landing.zone_warning')}</span>
-                </div>
-
-                <div className="terrain-caption">{t('landing.map_caption')}</div>
 
                 <div className="urban-edge">
-                  {Array.from({ length: 12 }).map((_, idx) => (
+                  {Array.from({ length: 9 }).map((_, idx) => (
                     <span
                       key={`urban-${idx}`}
                       className="urban-block"
@@ -150,11 +137,6 @@ export default function LandingPage() {
                       }}
                     />
                   ))}
-                </div>
-
-                <div className="alert-banner">
-                  <span className="alert-banner-label">{t('landing.visual_status')}</span>
-                  <strong>{t('landing.alert_banner')}</strong>
                 </div>
               </div>
             </div>

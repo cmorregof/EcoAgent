@@ -835,77 +835,111 @@ input:focus, select:focus {
 .ridge {
   position: absolute;
   pointer-events: none;
+  transform: translateZ(0);
 }
 
 .ridge-back {
-  left: -4%;
-  right: -6%;
-  bottom: 45%;
-  height: 28%;
-  background: linear-gradient(180deg, rgba(131, 89, 50, 0.78) 0%, rgba(96, 63, 38, 0.95) 100%);
-  clip-path: polygon(0 76%, 12% 64%, 22% 52%, 34% 46%, 46% 32%, 56% 38%, 68% 26%, 78% 22%, 88% 12%, 100% 4%, 100% 100%, 0 100%);
+  left: -6%;
+  right: -9%;
+  bottom: 48%;
+  height: 32%;
+  background: linear-gradient(180deg, rgba(152, 98, 54, 0.78) 0%, rgba(86, 54, 32, 0.96) 100%);
+  clip-path: polygon(
+    0 86%,
+    8% 78%,
+    16% 70%,
+    26% 64%,
+    34% 56%,
+    42% 50%,
+    50% 44%,
+    58% 46%,
+    66% 36%,
+    74% 30%,
+    80% 20%,
+    84% 12%,
+    88% 14%,
+    92% 6%,
+    96% 12%,
+    100% 4%,
+    100% 100%,
+    0 100%
+  );
 }
 
 .ridge-mid {
-  left: -6%;
-  right: -2%;
-  bottom: 27%;
-  height: 34%;
-  background: linear-gradient(180deg, rgba(184, 160, 136, 0.9) 0%, rgba(140, 116, 95, 0.96) 100%);
-  clip-path: polygon(0 82%, 14% 74%, 24% 66%, 34% 56%, 46% 49%, 58% 40%, 69% 31%, 80% 22%, 90% 16%, 100% 10%, 100% 100%, 0 100%);
+  left: -8%;
+  right: -4%;
+  bottom: 26%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(198, 176, 150, 0.92) 0%, rgba(118, 96, 79, 0.98) 100%);
+  clip-path: polygon(
+    0 92%,
+    10% 86%,
+    18% 80%,
+    28% 72%,
+    36% 66%,
+    44% 58%,
+    52% 52%,
+    60% 44%,
+    68% 36%,
+    74% 32%,
+    80% 22%,
+    84% 16%,
+    88% 18%,
+    92% 10%,
+    96% 16%,
+    100% 8%,
+    100% 100%,
+    0 100%
+  );
 }
 
 .ridge-front {
-  left: -2%;
-  right: -4%;
+  left: -4%;
+  right: -6%;
   bottom: 0;
-  height: 50%;
+  height: 56%;
   background:
     linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 18%),
     linear-gradient(180deg, rgba(46, 50, 57, 0.98) 0%, rgba(24, 26, 31, 1) 100%);
-  clip-path: polygon(0 94%, 10% 87%, 20% 78%, 31% 65%, 42% 56%, 54% 45%, 66% 34%, 78% 24%, 89% 14%, 100% 8%, 100% 100%, 0 100%);
+  clip-path: polygon(
+    0 98%,
+    7% 92%,
+    14% 86%,
+    22% 80%,
+    30% 72%,
+    38% 66%,
+    46% 58%,
+    54% 50%,
+    60% 44%,
+    66% 48%,
+    72% 38%,
+    78% 30%,
+    84% 22%,
+    90% 14%,
+    96% 8%,
+    100% 2%,
+    100% 100%,
+    0 100%
+  );
 }
 
 .slope-monitor-line {
   position: absolute;
-  right: 15%;
-  bottom: 29%;
-  width: 42%;
-  height: 16%;
-  clip-path: polygon(0 48%, 82% 0, 100% 10%, 18% 86%, 0 70%);
+  right: 12%;
+  bottom: 30%;
+  width: 52%;
+  height: 12%;
+  clip-path: polygon(0 64%, 86% 0, 100% 16%, 18% 100%, 0 82%);
   background: linear-gradient(90deg, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.04) 100%);
   border-top: 1px solid rgba(59,130,246,0.54);
   border-bottom: 1px solid rgba(59,130,246,0.16);
 }
 
-.risk-trace {
-  position: absolute;
-  border-radius: 9999px;
-  background: linear-gradient(180deg, rgba(255, 165, 132, 0.35) 0%, rgba(255, 165, 132, 0.06) 100%);
-  box-shadow: 0 0 20px rgba(255, 165, 132, 0.08);
-}
-
-.risk-trace-primary {
-  right: 19%;
-  bottom: 20%;
-  width: 18px;
-  height: 112px;
-  transform: rotate(20deg);
-}
-
-.risk-trace-secondary {
-  right: 33%;
-  bottom: 26%;
-  width: 10px;
-  height: 62px;
-  transform: rotate(18deg);
-  opacity: 0.6;
-}
-
 .risk-focus {
   position: absolute;
-  right: 16%;
-  bottom: 27%;
+  right: 18%;
+  bottom: 30%;
   width: 72px;
   height: 72px;
 }
@@ -934,80 +968,6 @@ input:focus, select:focus {
   50% { transform: scale(1.08); opacity: 0.45; }
 }
 
-.rain-readout span,
-.terrain-caption,
-.alert-banner-label,
-.metric-label {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-}
-
-.rain-readout {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
-  left: 1rem;
-  top: 1rem;
-  padding: 0.65rem 0.8rem;
-  background: rgba(14,14,16,0.68);
-  border: 1px solid rgba(59,130,246,0.12);
-}
-
-.rain-readout span {
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  color: var(--outline);
-}
-
-.rain-readout strong {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.risk-zone {
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.28rem 0.42rem;
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  right: 6%;
-  bottom: 47%;
-  background: rgba(14,14,16,0.64);
-  border: 1px solid rgba(255,165,132,0.16);
-  color: #ffb89a;
-  font-family: var(--font-mono);
-}
-
-.risk-zone-pulse {
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: currentColor;
-  box-shadow: 0 0 12px currentColor;
-  animation: node-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes node-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.8); opacity: 0.35; }
-}
-
-.terrain-caption {
-  position: absolute;
-  left: 1rem;
-  bottom: 4.15rem;
-  max-width: 210px;
-  font-size: 0.58rem;
-  letter-spacing: 0.1em;
-  color: rgba(232,228,231,0.56);
-  line-height: 1.5;
-}
-
 .urban-edge {
   position: absolute;
   left: 0;
@@ -1026,34 +986,6 @@ input:focus, select:focus {
   background: linear-gradient(180deg, rgba(72,77,83,0.86) 0%, rgba(31,33,38,0.98) 100%);
   border-top: 1px solid rgba(255,255,255,0.06);
   opacity: 0.82;
-}
-
-.alert-banner {
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
-  max-width: 190px;
-  padding: 0.7rem 0.8rem;
-  background: rgba(20,20,24,0.72);
-  border-left: 2px solid rgba(59,130,246,0.5);
-  backdrop-filter: blur(4px);
-}
-
-.alert-banner-label {
-  font-size: 0.56rem;
-  letter-spacing: 0.14em;
-  color: rgba(59,130,246,0.72);
-}
-
-.alert-banner strong {
-  font-family: var(--font-display);
-  font-size: 0.88rem;
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--on-surface);
 }
 
 .artifact-summary {
@@ -1081,9 +1013,11 @@ input:focus, select:focus {
 }
 
 .metric-label {
+  font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   color: var(--outline);
+  text-transform: uppercase;
 }
 
 .metric-value {
@@ -1156,22 +1090,6 @@ input:focus, select:focus {
 
   .landing-wrapper .artifact-footer {
     grid-template-columns: 1fr;
-  }
-
-  .landing-wrapper .alert-banner {
-    left: 1rem;
-    right: 1rem;
-    max-width: none;
-  }
-
-  .landing-wrapper .terrain-caption {
-    max-width: 180px;
-    bottom: 5.2rem;
-  }
-
-  .landing-wrapper .risk-zone {
-    right: 8%;
-    bottom: 48%;
   }
 
   .landing-wrapper .lang-toggle {
