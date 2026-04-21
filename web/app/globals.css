@@ -843,7 +843,7 @@ input:focus, select:focus {
   right: -9%;
   bottom: 48%;
   height: 32%;
-  background: linear-gradient(180deg, rgba(132, 88, 52, 0.76) 0%, rgba(72, 46, 28, 0.97) 100%);
+  background: linear-gradient(180deg, rgba(116, 82, 55, 0.74) 0%, rgba(56, 38, 26, 0.98) 100%);
   clip-path: polygon(
     0 86%,
     8% 78%,
@@ -871,7 +871,7 @@ input:focus, select:focus {
   right: -4%;
   bottom: 26%;
   height: 40%;
-  background: linear-gradient(180deg, rgba(186, 168, 146, 0.9) 0%, rgba(108, 89, 74, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(168, 156, 140, 0.9) 0%, rgba(92, 76, 64, 0.98) 100%);
   clip-path: polygon(
     0 92%,
     10% 86%,
@@ -900,41 +900,31 @@ input:focus, select:focus {
   bottom: 0;
   height: 56%;
   background:
+    radial-gradient(ellipse at 78% 56%, rgba(255, 196, 166, 0.11) 0%, rgba(255, 196, 166, 0) 62%),
+    radial-gradient(ellipse at 70% 66%, rgba(59,130,246,0.08) 0%, rgba(59,130,246,0) 66%),
     linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 18%),
     linear-gradient(180deg, rgba(46, 50, 57, 0.98) 0%, rgba(24, 26, 31, 1) 100%);
   clip-path: polygon(
     0 100%,
-    0 90%,
-    6% 84%,
-    14% 78%,
-    22% 70%,
-    30% 62%,
-    38% 52%,
-    46% 44%,
-    54% 36%,
-    62% 40%,
-    70% 30%,
-    78% 22%,
-    84% 14%,
-    90% 10%,
-    96% 6%,
+    0 62%,
+    6% 58%,
+    14% 54%,
+    22% 50%,
+    30% 44%,
+    38% 38%,
+    46% 34%,
+    54% 28%,
+    60% 24%,
+    66% 28%,
+    72% 22%,
+    78% 16%,
+    84% 12%,
+    90% 8%,
+    96% 4%,
     100% 0%,
     100% 100%,
     0 100%
   );
-}
-
-.ridge-front::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.9;
-  background:
-    radial-gradient(circle at 76% 46%, rgba(232, 220, 204, 0.22) 0%, rgba(232, 220, 204, 0.0) 55%),
-    radial-gradient(circle at 70% 54%, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.0) 64%);
-  /* A subtle scar-like shape near the monitored zone, without becoming a callout. */
-  clip-path: polygon(58% 60%, 74% 44%, 92% 50%, 82% 76%, 64% 74%);
-  pointer-events: none;
 }
 
 .slope-monitor-line {
