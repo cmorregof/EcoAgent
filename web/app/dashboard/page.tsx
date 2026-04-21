@@ -27,11 +27,11 @@ interface UserSettings {
   location_name: string;
 }
 
-const ALERT_CONFIG: Record<string, { color: string; label: string }> = {
-  LOW: { color: 'green', label: 'Bajo' },
-  MEDIUM: { color: 'amber', label: 'Medio' },
-  HIGH: { color: 'red', label: 'Alto' },
-  CRITICAL: { color: 'red', label: 'Crítico' },
+const ALERT_CONFIG: Record<string, { color: string; labelKey: string }> = {
+  LOW: { color: 'green', labelKey: 'dashboard.low' },
+  MEDIUM: { color: 'amber', labelKey: 'dashboard.medium' },
+  HIGH: { color: 'red', labelKey: 'dashboard.high' },
+  CRITICAL: { color: 'red', labelKey: 'dashboard.critical' },
 };
 
 export default function DashboardPage() {
@@ -98,52 +98,52 @@ export default function DashboardPage() {
   return (
     <>
       <div className="section-header reveal">
-        <div className="section-tag">RESUMEN METEOROLÓGICO Y RIESGO</div>
+        <div className="section-tag">{t('dashboard.summary_header')}</div>
         <div className="section-line"></div>
       </div>
 
       <div className="kpi-grid reveal">
         <div className="kpi-card featured">
-          <div className="kpi-label">RIESGO ACTUAL</div>
+          <div className="kpi-label">{t('dashboard.current_risk')}</div>
           <div className={`kpi-value ${alertStyle.color}`}>
-            {latestReport ? latestReport.alert_level : '—'}
+            {latestReport ? t(ALERT_CONFIG[latestReport.alert_level]?.labelKey || 'dashboard.low') : '—'}
           </div>
           <div className={`kpi-delta ${alertStyle.color === 'red' ? 'down' : 'up'}`}>
-            Prob. Deslizamiento: {latestReport ? (latestReport.risk_probability * 100).toFixed(1) : 0}%
+            {t('dashboard.probability_label')}: {latestReport ? (latestReport.risk_probability * 100).toFixed(1) : 0}%
           </div>
-          <div className="kpi-sub">MODELO CIR + POISSON JUMPS</div>
+          <div className="kpi-sub">{t('dashboard.model_label')}</div>
         </div>
         
         <div className="kpi-card">
-          <div className="kpi-label">PRECIPITACIÓN (ACUMULADA)</div>
+          <div className="kpi-label">{t('dashboard.precip')}</div>
           <div className="kpi-value">{latestReport ? latestReport.precipitation_mm.toFixed(1) : '—'}</div>
           <div className="kpi-delta" style={{ color: 'var(--on-surface-var)' }}>Milímetros (mm)</div>
-          <div className="kpi-sub">ESTACIÓN MANIZALES</div>
+          <div className="kpi-sub">{t('dashboard.station_label')}</div>
         </div>
 
         <div className="kpi-card">
-          <div className="kpi-label">TEMPERATURA / HUMEDAD</div>
+          <div className="kpi-label">{t('dashboard.temp_hum')}</div>
           <div className="kpi-value">{latestReport ? `${latestReport.temperature_c.toFixed(1)}°` : '—'}</div>
           <div className="kpi-delta" style={{ color: 'var(--accent)' }}>
             Humedad: {latestReport ? `${latestReport.humidity_pct.toFixed(0)}%` : '—'}
           </div>
-          <div className="kpi-sub">DATOS OPEN-METEO</div>
+          <div className="kpi-sub">{t('dashboard.data_source')}</div>
         </div>
 
         <div className="kpi-card">
-          <div className="kpi-label">SATURACIÓN DE SUELO</div>
+          <div className="kpi-label">{t('dashboard.saturation')}</div>
           <div className={`kpi-value ${latestReport && latestReport.mean_saturation > 80 ? 'red' : ''}`}>
             {latestReport ? `${latestReport.mean_saturation.toFixed(1)}%` : '—'}
           </div>
           <div className="kpi-delta" style={{ color: 'var(--on-surface-var)' }}>Media modelada (Hydrus)</div>
-          <div className="kpi-sub">LADERA OESTE</div>
+          <div className="kpi-sub">{t('dashboard.slope_label')}</div>
         </div>
       </div>
 
       <div className="two-col mt-8">
         <div className="panel reveal">
           <div className="panel-header">
-            <div className="panel-title">EVOLUCIÓN DEL RIESGO</div>
+            <div className="panel-title">{t('dashboard.risk_evolution')}</div>
             <div className="panel-tag">TIME SERIES</div>
           </div>
           <div className="panel-body">
@@ -159,7 +159,7 @@ export default function DashboardPage() {
 
         <div className="panel reveal">
           <div className="panel-header">
-            <div className="panel-title">MAPA DE RIESGO GEOSESPACIAL</div>
+            <div className="panel-title">{t('dashboard.spatial_map')}</div>
             <div className="panel-tag">SPATIAL RISK MAP</div>
           </div>
           <div className="panel-body p-0 h-[280px]">
@@ -174,17 +174,17 @@ export default function DashboardPage() {
 
       <div className="panel reveal mt-8">
         <div className="panel-header">
-          <div className="panel-title">HISTORIAL DE SIMULACIONES</div>
+          <div className="panel-title">{t('dashboard.sim_history')}</div>
           <div className="panel-tag">SYSTEM LOGS</div>
         </div>
         <div className="panel-body p-0">
           <table className="history-table">
             <thead>
               <tr>
-                <th>FECHA / HORA</th>
-                <th>NIVEL ALERTA</th>
+                <th>{t('dashboard.date')}</th>
+                <th>{t('dashboard.level')}</th>
                 <th>PROBABILIDAD (%)</th>
-                <th>SATURACIÓN</th>
+                <th>{t('dashboard.saturation')}</th>
               </tr>
             </thead>
             <tbody>
@@ -198,7 +198,7 @@ export default function DashboardPage() {
                       })}
                     </td>
                     <td className={`font-medium td-cvar ${style.color === 'amber' ? 'med' : style.color === 'red' ? 'high' : 'low'}`}>
-                      {r.alert_level}
+                      {t(ALERT_CONFIG[r.alert_level]?.labelKey || 'dashboard.low')}
                     </td>
                     <td className="font-mono text-obsidian-on-surface">
                       {(r.risk_probability * 100).toFixed(1)}%

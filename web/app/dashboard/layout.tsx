@@ -40,9 +40,9 @@ export default function DashboardLayout({
       {/* Sidebar */}
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <div className="brand-tag">// THE VELVETEEN PROJECT</div>
+          <div className="brand-tag">THE VELVETEEN PROJECT</div>
           <div className="brand-name">Eco<span>Agent</span></div>
-          <div className="brand-sub">CLIMATE RISK TERMINAL v2.0</div>
+          <div className="brand-sub">RISK MONITORING SYSTEM v2.0</div>
         </div>
 
         <nav className="sidebar-nav">
@@ -88,7 +88,7 @@ export default function DashboardLayout({
       {/* Main & Topbar */}
       <main className="main">
         <header className="topbar">
-          <div className="topbar-title">CLIMATE RISK TERMINAL</div>
+          <div className="topbar-title">RISK MONITORING SYSTEM</div>
           <div className="topbar-sep"></div>
           <div className="topbar-path">
             ecoagent.velveteen.app{pathname === '/dashboard' ? '/dashboard' : pathname}

@@ -767,3 +767,186 @@ input:focus, select:focus {
   .landing-wrapper .hero-visual { order: -1; }
   .landing-wrapper .terminal-window { max-width: 100%; animation: none; }
 }
+
+/* ═══════════════════════════════════════════════════
+   ECOAGENT — CARTOGRAPHIC HERO SYSTEM
+   Phase 2 Refinement: Monitoring Artifact
+═══════════════════════════════════════════════════ */
+
+.monitoring-artifact {
+  background: var(--surface-low);
+  border: 1px solid var(--outline-var);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 580px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+}
+
+.artifact-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--outline-var);
+  padding-bottom: 0.75rem;
+}
+
+.artifact-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--on-surface-var);
+}
+
+.artifact-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+}
+
+.spatial-grid {
+  height: 240px;
+  background: 
+    linear-gradient(rgba(59,130,246,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  position: relative;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--outline-var);
+  overflow: hidden;
+}
+
+.terrain-contour {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.risk-node {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.risk-node.active {
+  animation: node-pulse 2s infinite;
+}
+
+@keyframes node-pulse {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  50% { transform: translate(-50%, -50%) scale(2); opacity: 0.3; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.workflow-chain {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 0 1rem;
+}
+
+.workflow-chain::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 2rem;
+  right: 2rem;
+  height: 1px;
+  background: var(--outline-var);
+  z-index: 0;
+}
+
+.workflow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.step-dot {
+  width: 24px;
+  height: 24px;
+  background: var(--surface-mid);
+  border: 1px solid var(--outline-var);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--on-surface-var);
+  transition: all 0.3s;
+}
+
+.workflow-step.active .step-dot {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.step-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--outline);
+  text-transform: uppercase;
+}
+
+.workflow-step.active .step-label {
+  color: var(--on-surface-var);
+}
+
+.artifact-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--outline-var);
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+.metric-label { color: var(--outline); }
+.metric-value { color: var(--on-surface-var); }
+
+.lang-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 100;
+  display: flex;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.lang-btn {
+  color: var(--outline);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.lang-btn.active {
+  color: var(--accent);
+}
+
+.lang-sep {
+  color: var(--outline-var);
+}
