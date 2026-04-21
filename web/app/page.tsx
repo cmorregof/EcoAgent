@@ -43,6 +43,12 @@ export default function LandingPage() {
         
         {/* Left Column: Copy */}
         <div className="hero-content">
+          <div className="hero-context mono">
+            <span className="hero-context-prefix">{t('topbar.region_prefix')}</span>
+            <span className="hero-context-divider">·</span>
+            <span className="hero-context-name">{t('topbar.region_name')}</span>
+          </div>
+
           <div className="hero-eyebrow">
             <div className="status-dot"></div>
             <span className="mono text-obsidian-outline-var" style={{ color: 'var(--clr-outline)' }}>
@@ -95,71 +101,114 @@ export default function LandingPage() {
         <div className="hero-visual">
           <div className="monitoring-artifact">
             <div className="artifact-title-row">
-              <div className="artifact-title">{t('landing.visual_title')}</div>
-              <div className="artifact-status">
+              <div>
+                <div className="artifact-kicker">{t('landing.region_label')}</div>
+                <div className="artifact-title">{t('landing.visual_title')}</div>
+              </div>
+              <div className="artifact-status risk">
                 <div className="status-dot"></div>
                 {t('landing.visual_status')}
               </div>
             </div>
 
-            <div className="spatial-grid">
-              {/* Stylized terrain contours */}
-              <svg className="terrain-contour" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Steeper, more irregular peaks for Andean context */}
-                <path d="M0 190L60 140L130 160L190 100L260 135L330 80L400 120" stroke="currentColor" strokeWidth="0.5" />
-                <path d="M0 160L80 110L150 130L210 70L290 105L350 50L400 90" stroke="currentColor" strokeWidth="0.5" />
-                <path d="M0 130L100 80L170 100L230 40L320 75L370 20L400 60" stroke="currentColor" strokeWidth="0.5" />
-                
-                {/* Monitored Sector Highlight */}
-                <path d="M130 160L190 100L260 135Z" fill="var(--accent)" fillOpacity="0.08" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="3 2" />
-              </svg>
-              
-              {/* Risk Nodes */}
-              <div className="risk-node active" style={{ top: '40%', left: '30%' }}></div>
-              <div className="risk-node" style={{ top: '65%', left: '70%' }}></div>
-              <div className="risk-node" style={{ top: '25%', left: '55%' }}></div>
-              
-              {/* Scanning Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent w-1/4 animate-scan" style={{ left: '0%' }}></div>
+            <div className="artifact-scene">
+              <div className="terrain-panel">
+                <div className="scene-rain">
+                  {Array.from({ length: 20 }).map((_, idx) => (
+                    <span
+                      key={`rain-${idx}`}
+                      className={`rain-streak ${idx % 5 === 0 ? 'heavy' : ''}`}
+                      style={{ left: `${4 + idx * 4.6}%`, animationDelay: `${idx * 0.18}s` }}
+                    />
+                  ))}
+                </div>
+
+                <div className="terrain-grid"></div>
+                <div className="terrain-contours">
+                  <span className="contour-line contour-1"></span>
+                  <span className="contour-line contour-2"></span>
+                  <span className="contour-line contour-3"></span>
+                  <span className="contour-line contour-4"></span>
+                </div>
+
+                <div className="slope-body">
+                  <div className="slope-highlight slope-highlight-primary"></div>
+                  <div className="slope-highlight slope-highlight-secondary"></div>
+                </div>
+
+                <div className="slope-sector sector-primary">
+                  <span>{t('landing.sector_primary')}</span>
+                  <strong>68%</strong>
+                </div>
+                <div className="slope-sector sector-secondary">
+                  <span>{t('landing.sector_secondary')}</span>
+                  <strong>54%</strong>
+                </div>
+
+                <div className="risk-zone risk-zone-watch">
+                  <div className="risk-zone-pulse"></div>
+                  <span>{t('landing.zone_watch')}</span>
+                </div>
+                <div className="risk-zone risk-zone-warning">
+                  <div className="risk-zone-pulse"></div>
+                  <span>{t('landing.zone_warning')}</span>
+                </div>
+
+                <div className="drainage-flow"></div>
+                <div className="terrain-footprint"></div>
+              </div>
+
+              <div className="scene-sidebar">
+                <div className="rain-gauge">
+                  <span className="rain-gauge-label">{t('landing.rain_label')}</span>
+                  <strong>{t('landing.rain_value')}</strong>
+                  <div className="rain-gauge-track">
+                    <div className="rain-gauge-fill"></div>
+                  </div>
+                </div>
+                <p className="scene-caption">{t('landing.map_caption')}</p>
+              </div>
             </div>
 
             {/* Workflow Chain */}
             <div className="workflow-chain">
               <div className={`workflow-step ${activeStep >= 0 ? 'active' : ''}`}>
-                <div className="step-dot">M</div>
+                <div className="step-dot">1</div>
                 <div className="step-label">{t('landing.workflow_meteo')}</div>
               </div>
               <div className={`workflow-step ${activeStep >= 1 ? 'active' : ''}`}>
-                <div className="step-dot">S</div>
+                <div className="step-dot">2</div>
                 <div className="step-label">{t('landing.workflow_soil')}</div>
               </div>
               <div className={`workflow-step ${activeStep >= 2 ? 'active' : ''}`}>
-                <div className="step-dot">C</div>
+                <div className="step-dot">3</div>
                 <div className="step-label">{t('landing.workflow_model')}</div>
               </div>
               <div className={`workflow-step ${activeStep >= 3 ? 'active' : ''}`}>
-                <div className="step-dot">!</div>
+                <div className="step-dot">4</div>
                 <div className="step-label">{t('landing.workflow_risk')}</div>
               </div>
             </div>
 
+            <p className="artifact-summary">{t('landing.panel_summary')}</p>
+
             {/* Metrics */}
             <div className="artifact-metrics">
               <div className="metric-item">
-                <span className="metric-label">SATURATION</span>
-                <span className="metric-value">42.8%</span>
+                <span className="metric-label">{t('landing.metric_rain')}</span>
+                <span className="metric-value">{t('landing.rain_value')}</span>
               </div>
               <div className="metric-item">
-                <span className="metric-label">PRECIP_24H</span>
-                <span className="metric-value">12.4mm</span>
+                <span className="metric-label">{t('landing.metric_saturation')}</span>
+                <span className="metric-value">68%</span>
               </div>
               <div className="metric-item">
-                <span className="metric-label">SLOPE_ID</span>
-                <span className="metric-value">ALPHA-07</span>
+                <span className="metric-label">{t('landing.metric_sector')}</span>
+                <span className="metric-value">MNZ-N2</span>
               </div>
               <div className="metric-item">
-                <span className="metric-label">RISK_INDEX</span>
-                <span className="metric-value" style={{ color: 'var(--accent)' }}>0.14</span>
+                <span className="metric-label">{t('landing.metric_alert')}</span>
+                <span className="metric-value metric-value-alert">{t('landing.metric_alert_value')}</span>
               </div>
             </div>
           </div>
@@ -167,15 +216,6 @@ export default function LandingPage() {
 
       </section>
 
-      <style jsx>{`
-        @keyframes scan {
-          0% { left: -25%; }
-          100% { left: 100%; }
-        }
-        .animate-scan {
-          animation: scan 4s linear infinite;
-        }
-      `}</style>
     </div>
   );
 }
