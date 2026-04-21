@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
@@ -104,28 +105,21 @@ export default function LandingPage() {
 
             <div className="artifact-scene">
               <div className="terrain-panel">
-                <div className="terrain-atmosphere"></div>
-
-                <div className="scene-rain">
-                  {Array.from({ length: 12 }).map((_, idx) => (
-                    <span
-                      key={`rain-${idx}`}
-                      className={`rain-streak ${idx % 4 === 0 ? 'heavy' : ''}`}
-                      style={{ left: `${8 + idx * 7.1}%`, animationDelay: `${idx * 0.24}s` }}
-                    />
-                  ))}
-                </div>
-
-                <div className="ridge ridge-back"></div>
-                <div className="ridge ridge-mid"></div>
-                <div className="ridge ridge-front"></div>
-                <div className="slope-monitor-line"></div>
+                <Image
+                  src="/hero-andean-slope-rain.jpg"
+                  alt={t('landing.visual_title')}
+                  fill
+                  priority
+                  sizes="(max-width: 900px) calc(100vw - 2.5rem), 610px"
+                  className="terrain-image"
+                />
+                <div className="terrain-image-wash"></div>
+                <div className="terrain-observation-band"></div>
 
                 <div className="risk-focus">
                   <div className="risk-focus-ring"></div>
                   <div className="risk-focus-core"></div>
                 </div>
-
               </div>
             </div>
 
