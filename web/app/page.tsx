@@ -81,17 +81,17 @@ export default function LandingPage() {
 
           <div className="hero-stats mt-4">
             <div className="stat">
-              <span className="stat-value">24/7</span>
+              <span className="stat-value">{t('landing.stat_live_value')}</span>
               <span className="stat-label">{t('landing.stat_live')}</span>
             </div>
             <div className="stat-divider"></div>
             <div className="stat">
-              <span className="stat-value font-mono">CIR+</span>
+              <span className="stat-value stat-value-wide">{t('landing.stat_model_value')}</span>
               <span className="stat-label">{t('landing.stat_model')}</span>
             </div>
             <div className="stat-divider"></div>
             <div className="stat">
-              <span className="stat-value">A.I.</span>
+              <span className="stat-value">{t('landing.stat_alert_value')}</span>
               <span className="stat-label">{t('landing.stat_alert')}</span>
             </div>
           </div>
@@ -114,35 +114,37 @@ export default function LandingPage() {
             <div className="artifact-scene">
               <div className="terrain-panel">
                 <div className="scene-rain">
-                  {Array.from({ length: 20 }).map((_, idx) => (
+                  {Array.from({ length: 14 }).map((_, idx) => (
                     <span
                       key={`rain-${idx}`}
-                      className={`rain-streak ${idx % 5 === 0 ? 'heavy' : ''}`}
-                      style={{ left: `${4 + idx * 4.6}%`, animationDelay: `${idx * 0.18}s` }}
+                      className={`rain-streak ${idx % 4 === 0 ? 'heavy' : ''}`}
+                      style={{ left: `${6 + idx * 6.4}%`, animationDelay: `${idx * 0.22}s` }}
                     />
                   ))}
                 </div>
 
-                <div className="terrain-grid"></div>
+                <div className="terrain-haze"></div>
                 <div className="terrain-contours">
                   <span className="contour-line contour-1"></span>
                   <span className="contour-line contour-2"></span>
                   <span className="contour-line contour-3"></span>
-                  <span className="contour-line contour-4"></span>
                 </div>
 
-                <div className="slope-body">
-                  <div className="slope-highlight slope-highlight-primary"></div>
-                  <div className="slope-highlight slope-highlight-secondary"></div>
+                <div className="slope-mass slope-mass-back"></div>
+                <div className="slope-mass slope-mass-front">
+                  <div className="slope-monitor-band">
+                    <span>{t('landing.sector_primary')}</span>
+                    <strong>{t('landing.sector_status')}</strong>
+                  </div>
+                  <div className="risk-scar risk-scar-secondary"></div>
+                  <div className="risk-scar risk-scar-major"></div>
+                  <div className="runoff-trace runoff-trace-main"></div>
+                  <div className="runoff-trace runoff-trace-secondary"></div>
                 </div>
 
-                <div className="slope-sector sector-primary">
-                  <span>{t('landing.sector_primary')}</span>
-                  <strong>68%</strong>
-                </div>
-                <div className="slope-sector sector-secondary">
-                  <span>{t('landing.sector_secondary')}</span>
-                  <strong>54%</strong>
+                <div className="rain-readout">
+                  <span>{t('landing.rain_label')}</span>
+                  <strong>{t('landing.rain_value')}</strong>
                 </div>
 
                 <div className="risk-zone risk-zone-watch">
@@ -154,61 +156,61 @@ export default function LandingPage() {
                   <span>{t('landing.zone_warning')}</span>
                 </div>
 
-                <div className="drainage-flow"></div>
-                <div className="terrain-footprint"></div>
-              </div>
+                <div className="terrain-caption">{t('landing.map_caption')}</div>
 
-              <div className="scene-sidebar">
-                <div className="rain-gauge">
-                  <span className="rain-gauge-label">{t('landing.rain_label')}</span>
-                  <strong>{t('landing.rain_value')}</strong>
-                  <div className="rain-gauge-track">
-                    <div className="rain-gauge-fill"></div>
-                  </div>
+                <div className="urban-edge">
+                  {Array.from({ length: 12 }).map((_, idx) => (
+                    <span
+                      key={`urban-${idx}`}
+                      className="urban-block"
+                      style={{
+                        height: `${12 + (idx % 4) * 6}px`,
+                        width: `${12 + (idx % 3) * 5}px`,
+                      }}
+                    />
+                  ))}
                 </div>
-                <p className="scene-caption">{t('landing.map_caption')}</p>
+
+                <div className="alert-banner">
+                  <span className="alert-banner-label">{t('landing.workflow_risk')}</span>
+                  <strong>{t('landing.alert_banner')}</strong>
+                </div>
               </div>
             </div>
 
-            {/* Workflow Chain */}
-            <div className="workflow-chain">
-              <div className={`workflow-step ${activeStep >= 0 ? 'active' : ''}`}>
-                <div className="step-dot">1</div>
-                <div className="step-label">{t('landing.workflow_meteo')}</div>
+            <div className="signal-strip">
+              <div className={`signal-item ${activeStep >= 0 ? 'active' : ''}`}>
+                <span className="signal-index">01</span>
+                <span className="signal-label">{t('landing.workflow_meteo')}</span>
               </div>
-              <div className={`workflow-step ${activeStep >= 1 ? 'active' : ''}`}>
-                <div className="step-dot">2</div>
-                <div className="step-label">{t('landing.workflow_soil')}</div>
+              <div className={`signal-item ${activeStep >= 1 ? 'active' : ''}`}>
+                <span className="signal-index">02</span>
+                <span className="signal-label">{t('landing.workflow_soil')}</span>
               </div>
-              <div className={`workflow-step ${activeStep >= 2 ? 'active' : ''}`}>
-                <div className="step-dot">3</div>
-                <div className="step-label">{t('landing.workflow_model')}</div>
+              <div className={`signal-item ${activeStep >= 2 ? 'active' : ''}`}>
+                <span className="signal-index">03</span>
+                <span className="signal-label">{t('landing.workflow_model')}</span>
               </div>
-              <div className={`workflow-step ${activeStep >= 3 ? 'active' : ''}`}>
-                <div className="step-dot">4</div>
-                <div className="step-label">{t('landing.workflow_risk')}</div>
+              <div className={`signal-item ${activeStep >= 3 ? 'active' : ''}`}>
+                <span className="signal-index">04</span>
+                <span className="signal-label">{t('landing.workflow_risk')}</span>
               </div>
             </div>
 
             <p className="artifact-summary">{t('landing.panel_summary')}</p>
 
-            {/* Metrics */}
-            <div className="artifact-metrics">
-              <div className="metric-item">
+            <div className="artifact-footer">
+              <div className="footer-metric">
                 <span className="metric-label">{t('landing.metric_rain')}</span>
                 <span className="metric-value">{t('landing.rain_value')}</span>
               </div>
-              <div className="metric-item">
+              <div className="footer-metric">
                 <span className="metric-label">{t('landing.metric_saturation')}</span>
                 <span className="metric-value">68%</span>
               </div>
-              <div className="metric-item">
+              <div className="footer-metric">
                 <span className="metric-label">{t('landing.metric_sector')}</span>
-                <span className="metric-value">MNZ-N2</span>
-              </div>
-              <div className="metric-item">
-                <span className="metric-label">{t('landing.metric_alert')}</span>
-                <span className="metric-value metric-value-alert">{t('landing.metric_alert_value')}</span>
+                <span className="metric-value">{t('landing.metric_sector_value')}</span>
               </div>
             </div>
           </div>
