@@ -12,6 +12,10 @@ import type { IVoiceService } from '../domain/ports/IVoiceService.js';
 import type { IWeatherService, WeatherData } from '../domain/ports/IWeatherService.js';
 import type { ISessionRepository } from '../infrastructure/session/SessionRepository.js';
 import { type AlertThreshold, DEFAULT_USER_SETTINGS } from '../domain/models/UserSession.js';
+import {
+  SimulationRateLimitError,
+  SimulationServiceUnavailableError,
+} from '../infrastructure/simulation/errors.js';
 import { logger } from '../config/logger.js';
 import type OpenAI from 'openai';
 import { settings as appSettings } from '../config/settings.js';
@@ -27,6 +31,9 @@ export interface RiskReport {
 }
 
 export class RiskAnalysisUseCase {
+  private static readonly WEATHER_RETRY_DELAYS_MS = [800, 1800] as const;
+  private static readonly SIMULATION_RETRY_DELAYS_MS = [1200, 2600] as const;
+
   constructor(
     private readonly simulationEngine: ISimulationEngine,
     private readonly voiceService: IVoiceService,
@@ -56,19 +63,33 @@ export class RiskAnalysisUseCase {
     logger.info({ chatId, lat: settings.location_lat, lon: settings.location_lon }, 'Starting risk analysis');
 
     // 2. Fetch current weather for user's configured location
-    const weather = await this.weatherService.getCurrentWeather(
-      settings.location_lat,
-      settings.location_lon
+    const weather = await this.retryStep(
+      'weather',
+      RiskAnalysisUseCase.WEATHER_RETRY_DELAYS_MS,
+      () => this.weatherService.getCurrentWeather(
+        settings.location_lat,
+        settings.location_lon
+      ),
+      () => true,
+      { chatId, lat: settings.location_lat, lon: settings.location_lon }
     );
 
     // 3. Run CIR simulation with weather data
-    const simulation = await this.simulationEngine.simulate({
-      precipitation_mm: weather.precipitation_mm,
-      humidity_pct: weather.humidity_pct,
-      temperature_c: weather.temperature_c,
-      n_simulations: 1000,
-      time_horizon_hours: 24,
-    });
+    const simulation = await this.retryStep(
+      'simulation',
+      RiskAnalysisUseCase.SIMULATION_RETRY_DELAYS_MS,
+      () => this.simulationEngine.simulate({
+        precipitation_mm: weather.precipitation_mm,
+        humidity_pct: weather.humidity_pct,
+        temperature_c: weather.temperature_c,
+        n_simulations: 1000,
+        time_horizon_hours: 24,
+      }),
+      (err) =>
+        err instanceof SimulationServiceUnavailableError ||
+        err instanceof SimulationRateLimitError,
+      { chatId }
+    );
 
     // 4. Generate AI Executive Summary
     let aiSummary = '';
@@ -190,5 +211,48 @@ export class RiskAnalysisUseCase {
       `${weatherLabel}: ${weather.temperature_c}°C | ${rainLabel}: ${weather.precipitation_mm}mm | ${humidityLabel}: ${weather.humidity_pct}%\n\n` +
       `💡 *${aiLabel}*:\n${aiSummary}`
     );
+  }
+
+  private async retryStep<T>(
+    stepName: 'weather' | 'simulation',
+    delaysMs: readonly number[],
+    operation: () => Promise<T>,
+    shouldRetry: (err: unknown) => boolean,
+    logContext: Record<string, unknown>
+  ): Promise<T> {
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt <= delaysMs.length; attempt += 1) {
+      try {
+        return await operation();
+      } catch (err) {
+        lastError = err;
+
+        const hasRetriesLeft = attempt < delaysMs.length;
+        if (!hasRetriesLeft || !shouldRetry(err)) {
+          throw err;
+        }
+
+        const delayMs = delaysMs[attempt]!;
+        logger.warn(
+          {
+            ...logContext,
+            step: stepName,
+            attempt: attempt + 1,
+            retry_in_ms: delayMs,
+            err,
+          },
+          `Transient ${stepName} failure; retrying`
+        );
+
+        await this.sleep(delayMs);
+      }
+    }
+
+    throw lastError instanceof Error ? lastError : new Error(`Unknown ${stepName} failure`);
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

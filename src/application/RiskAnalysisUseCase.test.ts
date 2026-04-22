@@ -13,6 +13,13 @@ import type { IVoiceService } from '../domain/ports/IVoiceService.js';
 import type { IWeatherService, WeatherData } from '../domain/ports/IWeatherService.js';
 import type { ISessionRepository } from '../infrastructure/session/SessionRepository.js';
 import type { UserSettings } from '../domain/models/UserSession.js';
+import { SimulationServiceUnavailableError } from '../infrastructure/simulation/errors.js';
+
+vi.mock('../config/settings.js', () => ({
+  settings: {
+    OPENROUTER_MODEL: 'openai/gpt-4o-mini',
+  },
+}));
 
 // Mock logger
 vi.mock('../config/logger.js', () => ({
@@ -91,6 +98,10 @@ function createMocks() {
 }
 
 describe('RiskAnalysisUseCase', () => {
+  beforeEach(() => {
+    vi.useRealTimers();
+  });
+
   // TEST: CRITICAL alert + voice_enabled → voice.synthesize() IS called.
   // WHY: High-risk situations require multi-channel alerts. If voice synthesis
   //      silently stops being called, users won't receive urgent audio alerts.
@@ -139,6 +150,7 @@ describe('RiskAnalysisUseCase', () => {
   // WHY: Anti-hallucination requirement. If weather data can't be fetched,
   //      the use case MUST throw — never generate a report with fake data.
   it('propagates weather service errors without fabricating data', async () => {
+    vi.useFakeTimers();
     const mocks = createMocks();
     (mocks.weatherService.getCurrentWeather as ReturnType<typeof vi.fn>).mockRejectedValue(
       new Error('Weather API timeout')
@@ -152,7 +164,11 @@ describe('RiskAnalysisUseCase', () => {
       mocks.openai
     );
 
-    await expect(useCase.analyzeRisk('chat-123')).rejects.toThrow('Weather API timeout');
+    const reportPromise = useCase.analyzeRisk('chat-123');
+    const rejection = expect(reportPromise).rejects.toThrow('Weather API timeout');
+    await vi.advanceTimersByTimeAsync(2600);
+
+    await rejection;
 
     // Simulation should NOT have been called — no fake data path
     expect(mocks.simulationEngine.simulate).not.toHaveBeenCalled();
@@ -177,5 +193,52 @@ describe('RiskAnalysisUseCase', () => {
     await useCase.analyzeRisk('chat-123');
 
     expect(mocks.voiceService.synthesize).toHaveBeenCalledOnce();
+  });
+
+  it('retries weather fetch and succeeds on a transient failure', async () => {
+    vi.useFakeTimers();
+    const mocks = createMocks();
+    (mocks.weatherService.getCurrentWeather as ReturnType<typeof vi.fn>)
+      .mockRejectedValueOnce(new Error('Temporary weather timeout'))
+      .mockResolvedValue(MOCK_WEATHER);
+
+    const useCase = new RiskAnalysisUseCase(
+      mocks.simulationEngine,
+      mocks.voiceService,
+      mocks.weatherService,
+      mocks.sessionRepo,
+      mocks.openai
+    );
+
+    const reportPromise = useCase.analyzeRisk('chat-123');
+    await vi.advanceTimersByTimeAsync(800);
+    const report = await reportPromise;
+
+    expect(report.weather.temperature_c).toBe(MOCK_WEATHER.temperature_c);
+    expect(mocks.weatherService.getCurrentWeather).toHaveBeenCalledTimes(2);
+    expect(mocks.simulationEngine.simulate).toHaveBeenCalledOnce();
+  });
+
+  it('retries simulation when the Python engine is temporarily unavailable', async () => {
+    vi.useFakeTimers();
+    const mocks = createMocks();
+    (mocks.simulationEngine.simulate as ReturnType<typeof vi.fn>)
+      .mockRejectedValueOnce(new SimulationServiceUnavailableError('engine unavailable'))
+      .mockResolvedValue(createMockSimulation({ alert_level: 'MEDIUM', risk_probability: 0.2 }));
+
+    const useCase = new RiskAnalysisUseCase(
+      mocks.simulationEngine,
+      mocks.voiceService,
+      mocks.weatherService,
+      mocks.sessionRepo,
+      mocks.openai
+    );
+
+    const reportPromise = useCase.analyzeRisk('chat-123');
+    await vi.advanceTimersByTimeAsync(1200);
+    const report = await reportPromise;
+
+    expect(report.alert_level).toBe('MEDIUM');
+    expect(mocks.simulationEngine.simulate).toHaveBeenCalledTimes(2);
   });
 });

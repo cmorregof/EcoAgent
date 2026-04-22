@@ -11,6 +11,8 @@ import { settings } from './config/settings.js';
 import { logger } from './config/logger.js';
 
 // ── Infrastructure ───────────────────────────────────────────
+import { FailoverSimulationEngine } from './infrastructure/simulation/FailoverSimulationEngine.js';
+import { LocalCIREngine } from './infrastructure/simulation/LocalCIREngine.js';
 import { PythonCIREngine } from './infrastructure/simulation/PythonCIREngine.js';
 import { ElevenLabsService } from './infrastructure/voice/ElevenLabsService.js';
 import { OpenMeteoService } from './infrastructure/weather/OpenMeteoService.js';
@@ -38,7 +40,12 @@ async function main(): Promise<void> {
   logger.info('Composing EcoAgent dependency graph...');
 
   // 1. Infrastructure layer
-  const simulationEngine = new PythonCIREngine(settings.PYTHON_API_URL);
+  const pythonSimulationEngine = new PythonCIREngine(settings.PYTHON_API_URL);
+  const localSimulationEngine = new LocalCIREngine();
+  const simulationEngine = new FailoverSimulationEngine(
+    pythonSimulationEngine,
+    localSimulationEngine
+  );
   const voiceService = new ElevenLabsService(
     settings.ELEVENLABS_API_KEY,
     settings.ELEVENLABS_VOICE_ID
@@ -84,11 +91,11 @@ async function main(): Promise<void> {
   });
 
   // 4. Health check Python engine
-  const engineHealthy = await simulationEngine.healthCheck();
+  const engineHealthy = await pythonSimulationEngine.healthCheck();
   if (engineHealthy) {
     logger.info('Python CIR engine is healthy');
   } else {
-    logger.warn('Python CIR engine is not reachable — /clima will fail until it is started');
+    logger.warn('Python CIR engine is not reachable — local CIR fallback will be used for /clima');
   }
 
   // 5. Start bot
